@@ -19,7 +19,6 @@ LOG ON(
 )
 go
 USE QLCHTL
-
 go
 
 
@@ -33,7 +32,7 @@ create table NhanVien (
     GioiTinh NVARCHAR(10) CHECK (GioiTinh IN (N'Nam', N'Nữ')),
     DiaChi NVARCHAR(255),
    SDT VARCHAR(20) NOT NULL ,
-   Email VARCHAR(255),
+   Email VARCHAR(255) ,
     ChucVu NVARCHAR(50) NOT NULL,
     NgayVaoLam DATE,
      Luong DECIMAL(10, 2) CHECK (Luong > 0)
@@ -58,9 +57,16 @@ create table NhaCungCap (
     Email VARCHAR(255) 
 );
 
+-- Bảng LoaiSanPham
+create table LoaiSanPham (
+    MaLoaiSP INT IDENTITY(1,1) PRIMARY KEY,
+    TenLoaiSP NVARCHAR(255) NOT NULL,
+    MoTa NVARCHAR(MAX)
+);
+
 -- Bảng SanPham
 create table SanPham (
-    MaSP INT IDENTITY(1,1) PRIMARY KEY,
+    MasP INT  PRIMARY KEY,
     TenSP NVARCHAR(255) NOT NULL,
     MaLoaiSP INT NOT NULL,
     MaNCC INT NOT NULL,
@@ -73,15 +79,6 @@ create table SanPham (
     FOREIGN KEY (MaLoaiSP) REFERENCES LoaiSanPham(MaLoaiSP),
     FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC)
 );
-
--- Bảng LoaiSanPham
-create table LoaiSanPham (
-    MaLoaiSP INT IDENTITY(1,1) PRIMARY KEY,
-    TenLoaiSP NVARCHAR(255) NOT NULL,
-    MoTa NVARCHAR(MAX)
-);
-
-
 
 -- Bảng KhuyenMai
 create table KhuyenMai (
@@ -96,10 +93,10 @@ create table KhuyenMai (
 -- Bảng ChiTietKhuyenMai
 create table ChiTietKhuyenMai (
     MaKM INT NOT NULL,
-    MaSP INT NOT NULL,
-    PRIMARY KEY (MaKM, MaSP),
+    MasP INT NOT NULL,
+    PRIMARY KEY (MaKM, MasP),
     FOREIGN KEY (MaKM) REFERENCES KhuyenMai(MaKM),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+    FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 
 -- Bảng HoaDonBan
@@ -117,13 +114,13 @@ create table HoaDonBan (
 -- Bảng ChiTietHDBan
 create table ChiTietHDBan (
     MaHDBan INT NOT NULL,
-    MaSP INT NOT NULL,
+    MasP INT NOT NULL,
       SoLuong INT NOT NULL CHECK (SoLuong > 0),
     DonGia DECIMAL(10, 2) NOT NULL CHECK (DonGia >= 0),
     ThanhTien DECIMAL(10, 2) NOT NULL CHECK (ThanhTien >= 0),
-    PRIMARY KEY (MaHDBan, MaSP),
+    PRIMARY KEY (MaHDBan, MasP),
     FOREIGN KEY (MaHDBan) REFERENCES HoaDonBan(MaHDBan),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+    FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 
 -- Bảng HoaDonNhap
@@ -140,13 +137,13 @@ create table HoaDonNhap (
 -- Bảng ChiTietHDNhap
 create table ChiTietHDNhap (
    MaHDNhap INT NOT NULL,
-    MaSP INT NOT NULL,
+    MasP INT NOT NULL,
     SoLuong INT NOT NULL CHECK (SoLuong > 0),
     DonGia DECIMAL(10, 2) NOT NULL CHECK (DonGia >= 0),
     ThanhTien DECIMAL(10, 2) NOT NULL CHECK (ThanhTien >= 0),
-    PRIMARY KEY (MaHDNhap, MaSP),
+    PRIMARY KEY (MaHDNhap, MasP),
     FOREIGN KEY (MaHDNhap) REFERENCES HoaDonNhap(MaHDNhap),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+    FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 
 -- Bảng PhieuKiemKho
@@ -161,16 +158,15 @@ create table PhieuKiemKho (
 -- Bảng ChiTietPhieuKiemKho
 create table ChiTietPhieuKiemKho (
      MaPhieuKK INT NOT NULL,
-    MaSP INT NOT NULL,
+    MasP INT NOT NULL,
     SoLuongThucTe INT NOT NULL CHECK (SoLuongThucTe >= 0),
     SoLuongHeThong INT NOT NULL CHECK (SoLuongHeThong >= 0),
     ChenhLech INT NOT NULL,
-    PRIMARY KEY (MaPhieuKK, MaSP),
+    PRIMARY KEY (MaPhieuKK, MasP),
     FOREIGN KEY (MaPhieuKK) REFERENCES PhieuKiemKho(MaPhieuKK),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+    FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 go
-
 
 -----------------------------------------------------thêm dữ liệu vào bảng --------------------------------------------
 -- Bảng NhanVien
@@ -325,6 +321,7 @@ INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, Nga
 (N'Đỗ Văn Lợi', '1989-06-30', N'Nam', N'Hòa Bình', '0969001067', 'loi.do@gmail.com', N'Nhân viên vận hành máy', '2021-07-07', 9300000),
 (N'Vũ Thị Oanh', '1994-09-09', N'Nữ', N'Ninh Thuận', '0979001068', 'oanh.vu@gmail.com', N'Nhân viên phân tích kinh doanh', '2023-05-15', 9500000),
 (N'Đặng Thị Loan', '1994-02-02', N'Nữ', N'Vĩnh Phúc', '0924123421', 'loan.dang@gmail.com', N'Nhân viên phân tích dữ liệu', '2024-05-01', 10100000);
+
 -- Bảng KhachHang
 INSERT INTO KhachHang (HoTen, SDT, DiaChi, Email, DiemTichLuy) VALUES
 (N'Lê Thị M', '093123456', N'30 Đường Bà Triệu, Hà Nội', 'mle@email.com', 150),
@@ -532,109 +529,6 @@ INSERT INTO NhaCungCap (TenNCC, DiaChi, SDT, Email) VALUES
 (N'Công ty Thực phẩm quốc tế Masan', N'TP.HCM', '0282222334', 'support@masan.vn'),
 (N'Hợp tác xã E', N'Hà Nam', '0226554433', 'cooperativeE@hoptac.com');
 
--- Bảng SanPham
-INSERT INTO SanPham (TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, SoLuongTonKho, HanSuDung, MoTa) VALUES
-(N'Tivi Samsung Smart 4K 55 inch', 1, 1, N'Chiếc', 8000000, 12000000, 50, NULL, N'Tivi thông minh màn hình lớn'),
-(N'Nồi cơm điện Sharp 1.8L', 2, 2, N'Chiếc', 300000, 500000, 100, NULL, N'Nồi cơm điện dung tích lớn'),
-(N'Mì gói Hảo Hảo', 3, 3, N'Thùng', 60000, 90000, 200, '2025-07-30', N'Mì ăn liền phổ biến'),
-(N'Áo sơ mi nam trắng', 4, 4, N'Chiếc', 150000, 250000, 80, NULL, N'Áo sơ mi công sở'),
-(N'Sách Đắc Nhân Tâm', 5, 5, N'Cuốn', 50000, 80000, 150, NULL, N'Sách self-help nổi tiếng'),
-(N'Ô tô đồ chơi điều khiển', 6, 6, N'Chiếc', 200000, 350000, 70, NULL, N'Ô tô điều khiển từ xa'),
-(N'Kem chống nắng Sunplay SPF50+', 7, 7, N'Chai', 80000, 120000, 120, '2026-03-15', N'Kem chống nắng hiệu quả'),
-(N'Bút bi Thiên Long', 8, 8, N'Hộp', 25000, 40000, 300, NULL, N'Bút bi chất lượng tốt'),
-(N'Giày đá bóng Adidas', 9, 9, N'Đôi', 500000, 800000, 60, NULL, N'Giày đá bóng chuyên nghiệp'),
-(N'Bàn chải đánh răng Oral-B', 10, 10, N'Cây', 20000, 35000, 250, NULL, N'Bàn chải đánh răng mềm'),
-(N'Laptop Dell XPS 13', 11, 11, N'Chiếc', 15000000, 20000000, 30, NULL, N'Laptop cao cấp, hiệu năng mạnh'),
-(N'Máy giặt LG Inverter 9kg', 12, 12, N'Chiếc', 5000000, 7500000, 40, NULL, N'Máy giặt tiết kiệm điện'),
-(N'Nước ngọt Coca-Cola 1.5L', 13, 13, N'Thùng', 120000, 180000, 150, '2025-12-31', N'Nước ngọt giải khát phổ biến'),
-(N'Quần jeans nam Levi’s', 14, 14, N'Chiếc', 400000, 600000, 90, NULL, N'Quần jeans thời trang'),
-(N'Sách Nhà Giả Kim', 15, 15, N'Cuốn', 60000, 100000, 120, NULL, N'Tiểu thuyết nổi tiếng thế giới'),
-(N'Xe đẩy đồ chơi trẻ em', 16, 16, N'Chiếc', 150000, 250000, 80, NULL, N'Xe đẩy đồ chơi an toàn'),
-(N'Sữa rửa mặt Cetaphil 500ml', 17, 17, N'Chai', 200000, 300000, 100, '2026-06-30', N'Sữa rửa mặt dịu nhẹ'),
-(N'Vở học sinh 200 trang', 188, 18, N'Cuốn', 15000, 25000, 500, NULL, N'Vở học sinh chất lượng cao'),
-(N'Găng tay bóng chày Wilson', 19, 19, N'Đôi', 300000, 450000, 50, NULL, N'Găng tay bóng chày chuyên dụng'),
-(N'Kem đánh răng Colgate 180g', 20, 20, N'Tuýp', 30000, 50000, 200, '2026-01-15', N'Kem đánh răng bảo vệ răng'),
-(N'Máy xay sinh tố Philips', 21, 21, N'Chiếc', 600000, 900000, 60, NULL, N'Máy xay đa năng, bền bỉ'),
-(N'Điện thoại iPhone 14 Pro', 21, 22, N'Chiếc', 20000000, 27000000, 25, NULL, N'Điện thoại cao cấp, camera sắc nét'),
-(N'Bánh quy Cosy 500g', 23, 23, N'Hộp', 50000, 80000, 180, '2025-10-20', N'Bánh quy thơm ngon'),
-(N'Áo khoác nữ Uniqlo', 24, 24, N'Chiếc', 300000, 500000, 70, NULL, N'Áo khoác thời trang, ấm áp'),
-(N'Sách Lược Sử Thời Gian', 25, 25, N'Cuốn', 80000, 120000, 100, NULL, N'Sách khoa học hấp dẫn'),
-(N'Búp bê Barbie thời trang', 26, 26, N'Chiếc', 100000, 180000, 90, NULL, N'Búp bê thời trang cho trẻ em'),
-(N'Nước hoa Dior Sauvage 100ml', 27, 27, N'Chai', 1500000, 2000000, 40, NULL, N'Nước hoa nam cao cấp'),
-(N'Bút chì Faber-Castell', 28, 28, N'Hộp', 20000, 35000, 400, NULL, N'Bút chì chất lượng cao'),
-(N'Túi thể thao Nike', 29, 29, N'Chiếc', 250000, 400000, 60, NULL, N'Túi thể thao bền, tiện dụng'),
-(N'Sữa tắm Dove 1L', 30, 30, N'Chai', 100000, 150000, 120, '2026-04-30', N'Sữa tắm dưỡng ẩm da'),
-(N'Tủ lạnh Samsung 300L', 31, 31, N'Chiếc', 7000000, 10000000, 35, NULL, N'Tủ lạnh tiết kiệm điện'),
-(N'Bánh mì sandwich Kinh Đô', 32, 32, N'Gói', 25000, 40000, 200, '2025-09-15', N'Bánh mì mềm thơm'),
-(N'Váy maxi nữ thời trang', 33, 33, N'Chiếc', 200000, 350000, 80, NULL, N'Váy maxi nhẹ nhàng, thanh lịch'),
-(N'Sách Hài Hước Một Chút', 34, 34, N'Cuốn', 40000, 70000, 130, NULL, N'Sách hài hước giải trí'),
-(N'Đồ chơi xếp hình LEGO 500 mảnh', 35, 35, N'Hộp', 300000, 450000, 70, NULL, N'Xếp hình sáng tạo cho trẻ'),
-(N'Son môi L’Oreal Paris', 36, 36, N'Thỏi', 120000, 180000, 100, '2026-02-28', N'Son môi màu sắc thời thượng'),
-(N'Tẩy bút chì Pelikan', 37, 37, N'Cục', 10000, 20000, 600, NULL, N'Tẩy sạch, không để lại vết'),
-(N'Nước tẩy trang Bioderma 500ml', 38, 38, N'Chai', 250000, 350000, 80, '2026-05-31', N'Nước tẩy trang dịu nhẹ'),
-(N'Máy pha cà phê De’Longhi', 39, 39, N'Chiếc', 2000000, 3000000, 20, NULL, N'Máy pha cà phê chuyên nghiệp'),
-(N'Sữa tươi Vinamilk 1L', 40, 40, N'Hộp', 20000, 35000, 250, '2025-11-30', N'Sữa tươi nguyên chất'),
-(N'Áo thun nam Zara', 41, 41, N'Chiếc', 100000, 180000, 100, NULL, N'Áo thun nam thời trang'),
-(N'Sách Tư Duy Nhanh Và Chậm', 42, 42, N'Cuốn', 90000, 140000, 110, NULL, N'Sách tâm lý học nổi tiếng'),
-(N'Bộ đồ chơi nấu ăn trẻ em', 43, 43, N'Bộ', 150000, 250000, 85, NULL, N'Đồ chơi nấu ăn an toàn'),
-(N'Mặt nạ dưỡng da Innisfree', 44, 44, N'Miếng', 15000, 25000, 300, '2026-03-31', N'Mặt nạ dưỡng da tự nhiên'),
-(N'Bút mực Parker', 45, 45, N'Cây', 500000, 800000, 50, NULL, N'Bút mực cao cấp'),
-(N'Giày chạy bộ Asics', 46, 46, N'Đôi', 600000, 900000, 60, NULL, N'Giày chạy bộ êm ái'),
-(N'Xà phòng rửa tay Lifebuoy 500ml', 47, 47, N'Chai', 40000, 60000, 150, '2026-07-31', N'Xà phòng diệt khuẩn'),
-(N'Máy hút bụi Dyson', 48, 48, N'Chiếc', 4000000, 6000000, 25, NULL, N'Máy hút bụi không dây mạnh mẽ'),
-(N'Kẹo dẻo Haribo 200g', 49, 49, N'Gói', 30000, 50000, 200, '2025-12-15', N'Kẹo dẻo trái cây ngon'),
-(N'Áo len nữ H&M', 50, 50, N'Chiếc', 200000, 350000, 80, NULL, N'Áo len ấm áp, thời trang'),
-(N'Sách Bố Già', 51, 51, N'Cuốn', 70000, 110000, 120, NULL, N'Tiểu thuyết kinh điển'),
-(N'Đồ chơi robot biến hình', 52, 52, N'Chiếc', 250000, 400000, 70, NULL, N'Robot biến hình thú vị'),
-(N'Toner Thayers 355ml', 53, 53, N'Chai', 150000, 220000, 90, '2026-04-30', N'Toner dưỡng da không cồn'),
-(N'Bộ bút màu 24 màu Crayola', 54, 54, N'Hộp', 80000, 120000, 200, NULL, N'Bút màu an toàn cho trẻ'),
-(N'Bóng đá Mitre', 55, 55, N'Quả', 150000, 250000, 100, NULL, N'Bóng đá chất lượng cao'),
-(N'Sữa dưỡng thể Nivea 400ml', 56, 56, N'Chai', 100000, 150000, 120, '2026-06-30', N'Sữa dưỡng thể dưỡng ẩm'),
-(N'Loa Bluetooth JBL Flip 5', 57, 57, N'Chiếc', 1500000, 2000000, 40, NULL, N'Loa Bluetooth âm thanh chất lượng'),
-(N'Bánh snack Lay’s 100g', 58, 58, N'Gói', 15000, 25000, 300, '2025-10-31', N'Bánh snack giòn tan'),
-(N'Quần short nam Adidas', 59, 59, N'Chiếc', 200000, 350000, 90, NULL, N'Quần short thể thao thoải mái'),
-(N'Sách Sapiens', 60, 60, N'Cuốn', 100000, 150000, 110, NULL, N'Sách lịch sử nhân loại'),
-(N'Bộ đồ chơi bác sĩ trẻ em', 61, 61, N'Bộ', 200000, 350000, 80, NULL, N'Đồ chơi bác sĩ an toàn'),
-(N'Serum The Ordinary Niacinamide', 62, 62, N'Chai', 200000, 300000, 100, '2026-05-31', N'Serum dưỡng da hiệu quả'),
-(N'Bút highlighter Stabilo', 63, 63, N'Cây', 20000, 35000, 250, NULL, N'Bút highlighter màu sắc tươi sáng'),
-(N'Mũ bóng chày Nike', 64, 64, N'Chiếc', 150000, 250000, 80, NULL, N'Mũ bóng chày thời trang'),
-(N'Nước súc miệng Listerine 500ml', 65, 65, N'Chai', 80000, 120000, 150, '2026-03-31', N'Nước súc miệng diệt khuẩn'),
-(N'Máy lọc không khí Xiaomi', 66, 66, N'Chiếc', 2000000, 3000000, 30, NULL, N'Máy lọc không khí thông minh'),
-(N'Trà xanh C2 500ml', 67, 67, N'Thùng', 90000, 140000, 200, '2025-11-15', N'Trà xanh giải khát'),
-(N'Áo khoác gió Columbia', 68, 68, N'Chiếc', 500000, 800000, 60, NULL, N'Áo khoác gió chống thấm'),
-(N'Sách 7 Thói Quen Hiệu Quả', 69, 69, N'Cuốn', 80000, 120000, 100, NULL, N'Sách phát triển bản thân'),
-(N'Bộ đồ chơi siêu nhân', 70, 70, N'Bộ', 250000, 400000, 70, NULL, N'Đồ chơi siêu nhân hấp dẫn'),
-(N'Kem dưỡng ẩm CeraVe 340g', 71, 71, N'Hũ', 250000, 350000, 80, '2026-07-31', N'Kem dưỡng ẩm cho da khô'),
-(N'Bút gel Muji', 72, 72, N'Cây', 20000, 35000, 300, NULL, N'Bút gel mực mịn'),
-(N'Gậy bóng chày Louisville', 73, 73, N'Cây', 400000, 600000, 50, NULL, N'Gậy bóng chày chất lượng'),
-(N'Sữa rửa tay Method 300ml', 74, 74, N'Chai', 60000, 90000, 120, '2026-04-30', N'Sữa rửa tay tự nhiên'),
-(N'Tai nghe Sony WH-1000XM5', 75, 75, N'Chiếc', 5000000, 7000000, 20, NULL, N'Tai nghe chống ồn cao cấp'),
-(N'Bánh trung thu Kinh Đô', 76, 76, N'Hộp', 200000, 300000, 100, '2025-09-30', N'Bánh trung thu truyền thống'),
-(N'Áo polo nam Lacoste', 77, 77, N'Chiếc', 300000, 500000, 80, NULL, N'Áo polo cao cấp'),
-(N'Sách Harry Potter', 78, 78, N'Cuốn', 120000, 180000, 120, NULL, N'Tiểu thuyết giả tưởng nổi tiếng'),
-(N'Đồ chơi máy bay điều khiển', 79, 79, N'Chiếc', 300000, 450000, 60, NULL, N'Máy bay điều khiển từ xa'),
-(N'Sữa tắm Olay 650ml', 80, 80, N'Chai', 90000, 140000, 100, '2026-06-30', N'Sữa tắm dưỡng da mềm mại'),
-(N'Máy ảnh Canon EOS M50', 81, 81, N'Chiếc', 8000000, 11000000, 15, NULL, N'Máy ảnh mirrorless chất lượng'),
-(N'Nước tăng lực Red Bull 250ml', 82, 82, N'Thùng', 150000, 220000, 150, '2025-12-31', N'Nước tăng lực mạnh mẽ'),
-(N'Quần tây nam Canifa', 83, 83, N'Chiếc', 250000, 400000, 90, NULL, N'Quần tây công sở lịch lãm'),
-(N'Sách Thinking, Fast and Slow', 84, 84, N'Cuốn', 100000, 150000, 110, NULL, N'Sách tâm lý học sâu sắc'),
-(N'Bộ đồ chơi xây dựng', 85, 85, N'Bộ', 200000, 350000, 80, NULL, N'Đồ chơi xây dựng sáng tạo'),
-(N'Son dưỡng môi Burt’s Bees', 86, 86, N'Thỏi', 80000, 120000, 150, '2026-05-31', N'Son dưỡng môi tự nhiên'),
-(N'Bút bi Pilot', 87, 87, N'Cây', 15000, 25000, 400, NULL, N'Bút bi mực đều'),
-(N'Bóng rổ Spalding', 88, 88, N'Quả', 200000, 350000, 70, NULL, N'Bóng rổ chất lượng cao'),
-(N'Nước rửa chén Seventh Generation', 89, 89, N'Chai', 70000, 100000, 120, '2026-04-30', N'Nước rửa chén thân thiện môi trường'),
-(N'Máy in HP LaserJet', 90, 90, N'Chiếc', 3000000, 4500000, 20, NULL, N'Máy in laser hiệu quả'),
-(N'Sữa chua Vinamilk 100g', 91, 91, N'Hộp', 5000, 10000, 500, '2025urbed11-30', N'Sữa chua bổ dưỡng'),
-(N'Áo blazer nữ Mango', 92, 92, N'Chiếc', 400000, 600000, 60, NULL, N'Áo blazer thời trang công sở'),
-(N'Sách The Alchemist', 93, 93, N'Cuốn', 60000, 100000, 130, NULL, N'Tiểu thuyết truyền cảm hứng'),
-(N'Đồ chơi tàu hỏa trẻ em', 94, 94, N'Bộ', 250000, 400000, 70, NULL, N'Đồ chơi tàu hỏa thú vị'),
-(N'Kem dưỡng da Neutrogena 50ml', 95, 95, N'Hũ', 200000, 300000, 90, '2026-06-30', N'Kem dưỡng da dịu nhẹ'),
-(N'Bút chì màu Prismacolor', 96, 96, N'Hộp', 300000, 450000, 100, NULL, N'Bút chì màu chuyên nghiệp'),
-(N'Vợt cầu lông Yonex', 97, 97, N'Cây', 500000, 800000, 50, NULL, N'Vợt cầu lông chất lượng'),
-(N'Sữa tắm Palmolive 750ml', 98, 98, N'Chai', 80000, 120000, 120, '2026-05-31', N'Sữa tắm thơm mát'),
-(N'Đồng hồ thông minh Apple Watch', 99, 99, N'Chiếc', 6000000, 9000000, 25, NULL, N'Đồng hồ thông minh cao cấp'),
-(N'Bánh gạo Orion 200g', 100, 100, N'Gói', 20000, 35000, 200, '2025-11-15', N'Bánh gạo giòn ngon');
-
 
 -- Bảng LoaiSanPham
 INSERT INTO LoaiSanPham (TenLoaiSP, MoTa) VALUES
@@ -739,6 +633,109 @@ INSERT INTO LoaiSanPham (TenLoaiSP, MoTa) VALUES
 (N'Dụng cụ golf', N'Gậy golf, bóng golf và phụ kiện golf'),
 (N'Sản phẩm chăm sóc da nhạy cảm', N'Sản phẩm dành cho da nhạy cảm');
 
+-- Bảng SanPham
+INSERT INTO SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, SoLuongTonKho, HanSuDung, MoTa) VALUES
+(1,N'Tivi Samsung Smart 4K 55 inch', 1, 1, N'Chiếc', 8000000, 12000000, 50, NULL, N'Tivi thông minh màn hình lớn'),
+(2,N'Nồi cơm điện Sharp 1.8L', 2, 2, N'Chiếc', 300000, 500000, 100, NULL, N'Nồi cơm điện dung tích lớn'),
+(3,N'Mì gói Hảo Hảo', 3, 3, N'Thùng', 60000, 90000, 200, '2025-07-30', N'Mì ăn liền phổ biến'),
+(4,N'Áo sơ mi nam trắng', 4, 4, N'Chiếc', 150000, 250000, 80, NULL, N'Áo sơ mi công sở'),
+(5,N'Sách Đắc Nhân Tâm', 5, 5, N'Cuốn', 50000, 80000, 150, NULL, N'Sách self-help nổi tiếng'),
+(6,N'Ô tô đồ chơi điều khiển', 6, 6, N'Chiếc', 200000, 350000, 70, NULL, N'Ô tô điều khiển từ xa'),
+(7,N'Kem chống nắng Sunplay SPF50+', 7, 7, N'Chai', 80000, 120000, 120, '2026-03-15', N'Kem chống nắng hiệu quả'),
+(8, N'Bút bi Thiên Long', 8, 8, N'Hộp', 25000, 40000, 300, NULL, N'Bút bi chất lượng tốt'),
+(9, N'Giày đá bóng Adidas', 9, 9, N'Đôi', 500000, 800000, 60, NULL, N'Giày đá bóng chuyên nghiệp'),
+(10 ,N'Bàn chải đánh răng Oral-B', 10, 10, N'Cây', 20000, 35000, 250, NULL, N'Bàn chải đánh răng mềm'),
+(11,N'Laptop Dell XPS 13', 11, 11, N'Chiếc', 15000000, 20000000, 30, NULL, N'Laptop cao cấp, hiệu năng mạnh'),
+(12,N'Máy giặt LG Inverter 9kg', 12, 12, N'Chiếc', 5000000, 7500000, 40, NULL, N'Máy giặt tiết kiệm điện'),
+(13,N'Nước ngọt Coca-Cola 1.5L', 13, 13, N'Thùng', 120000, 180000, 150, '2025-12-31', N'Nước ngọt giải khát phổ biến'),
+(14,N'Quần jeans nam Levi’s', 14, 14, N'Chiếc', 400000, 600000, 90, NULL, N'Quần jeans thời trang'),
+(15,N'Sách Nhà Giả Kim', 15, 15, N'Cuốn', 60000, 100000, 120, NULL, N'Tiểu thuyết nổi tiếng thế giới'),
+(16,N'Xe đẩy đồ chơi trẻ em', 16, 16, N'Chiếc', 150000, 250000, 80, NULL, N'Xe đẩy đồ chơi an toàn'),
+(17,N'Sữa rửa mặt Cetaphil 500ml', 17, 17, N'Chai', 200000, 300000, 100, '2026-06-30', N'Sữa rửa mặt dịu nhẹ'),
+(18,N'Vở học sinh 200 trang', 188, 18, N'Cuốn', 15000, 25000, 500, NULL, N'Vở học sinh chất lượng cao'),
+(19,N'Găng tay bóng chày Wilson', 19, 19, N'Đôi', 300000, 450000, 50, NULL, N'Găng tay bóng chày chuyên dụng'),
+(20,N'Kem đánh răng Colgate 180g', 20, 20, N'Tuýp', 30000, 50000, 200, '2026-01-15', N'Kem đánh răng bảo vệ răng'),
+(21,N'Máy xay sinh tố Philips', 21, 21, N'Chiếc', 600000, 900000, 60, NULL, N'Máy xay đa năng, bền bỉ'),
+(22,N'Điện thoại iPhone 14 Pro', 21, 22, N'Chiếc', 20000000, 27000000, 25, NULL, N'Điện thoại cao cấp, camera sắc nét'),
+(23,N'Bánh quy Cosy 500g', 23, 23, N'Hộp', 50000, 80000, 180, '2025-10-20', N'Bánh quy thơm ngon'),
+(24,N'Áo khoác nữ Uniqlo', 24, 24, N'Chiếc', 300000, 500000, 70, NULL, N'Áo khoác thời trang, ấm áp'),
+(25,N'Sách Lược Sử Thời Gian', 25, 25, N'Cuốn', 80000, 120000, 100, NULL, N'Sách khoa học hấp dẫn'),
+(26,N'Búp bê Barbie thời trang', 26, 26, N'Chiếc', 100000, 180000, 90, NULL, N'Búp bê thời trang cho trẻ em'),
+(27,N'Nước hoa Dior Sauvage 100ml', 27, 27, N'Chai', 1500000, 2000000, 40, NULL, N'Nước hoa nam cao cấp'),
+(28,N'Bút chì Faber-Castell', 28, 28, N'Hộp', 20000, 35000, 400, NULL, N'Bút chì chất lượng cao'),
+(29,N'Túi thể thao Nike', 29, 29, N'Chiếc', 250000, 400000, 60, NULL, N'Túi thể thao bền, tiện dụng'),
+(30,N'Sữa tắm Dove 1L', 30, 30, N'Chai', 100000, 150000, 120, '2026-04-30', N'Sữa tắm dưỡng ẩm da'),
+(31,N'Tủ lạnh Samsung 300L', 31, 31, N'Chiếc', 7000000, 10000000, 35, NULL, N'Tủ lạnh tiết kiệm điện'),
+(32,N'Bánh mì sandwich Kinh Đô', 32, 32, N'Gói', 25000, 40000, 200, '2025-09-15', N'Bánh mì mềm thơm'),
+(33,N'Váy maxi nữ thời trang', 33, 33, N'Chiếc', 200000, 350000, 80, NULL, N'Váy maxi nhẹ nhàng, thanh lịch'),
+(34,N'Sách Hài Hước Một Chút', 34, 34, N'Cuốn', 40000, 70000, 130, NULL, N'Sách hài hước giải trí'),
+(35,N'Đồ chơi xếp hình LEGO 500 mảnh', 35, 35, N'Hộp', 300000, 450000, 70, NULL, N'Xếp hình sáng tạo cho trẻ'),
+(36,N'Son môi L’Oreal Paris', 36, 36, N'Thỏi', 120000, 180000, 100, '2026-02-28', N'Son môi màu sắc thời thượng'),
+(37,N'Tẩy bút chì Pelikan', 37, 37, N'Cục', 10000, 20000, 600, NULL, N'Tẩy sạch, không để lại vết'),
+(38,N'Nước tẩy trang Bioderma 500ml', 38, 38, N'Chai', 250000, 350000, 80, '2026-05-31', N'Nước tẩy trang dịu nhẹ'),
+(39,N'Máy pha cà phê De’Longhi', 39, 39, N'Chiếc', 2000000, 3000000, 20, NULL, N'Máy pha cà phê chuyên nghiệp'),
+(40,N'Sữa tươi Vinamilk 1L', 40, 40, N'Hộp', 20000, 35000, 250, '2025-11-30', N'Sữa tươi nguyên chất'),
+(41,N'Áo thun nam Zara', 41, 41, N'Chiếc', 100000, 180000, 100, NULL, N'Áo thun nam thời trang'),
+(42,N'Sách Tư Duy Nhanh Và Chậm', 42, 42, N'Cuốn', 90000, 140000, 110, NULL, N'Sách tâm lý học nổi tiếng'),
+(43,N'Bộ đồ chơi nấu ăn trẻ em', 43, 43, N'Bộ', 150000, 250000, 85, NULL, N'Đồ chơi nấu ăn an toàn'),
+(44,N'Mặt nạ dưỡng da Innisfree', 44, 44, N'Miếng', 15000, 25000, 300, '2026-03-31', N'Mặt nạ dưỡng da tự nhiên'),
+(45,N'Bút mực Parker', 45, 45, N'Cây', 500000, 800000, 50, NULL, N'Bút mực cao cấp'),
+(46,N'Giày chạy bộ Asics', 46, 46, N'Đôi', 600000, 900000, 60, NULL, N'Giày chạy bộ êm ái'),
+(47,N'Xà phòng rửa tay Lifebuoy 500ml', 47, 47, N'Chai', 40000, 60000, 150, '2026-07-31', N'Xà phòng diệt khuẩn'),
+(48,N'Máy hút bụi Dyson', 48, 48, N'Chiếc', 4000000, 6000000, 25, NULL, N'Máy hút bụi không dây mạnh mẽ'),
+(49,N'Kẹo dẻo Haribo 200g', 49, 49, N'Gói', 30000, 50000, 200, '2025-12-15', N'Kẹo dẻo trái cây ngon'),
+(50,N'Áo len nữ H&M', 50, 50, N'Chiếc', 200000, 350000, 80, NULL, N'Áo len ấm áp, thời trang'),
+(51,N'Sách Bố Già', 51, 51, N'Cuốn', 70000, 110000, 120, NULL, N'Tiểu thuyết kinh điển'),
+(52,N'Đồ chơi robot biến hình', 52, 52, N'Chiếc', 250000, 400000, 70, NULL, N'Robot biến hình thú vị'),
+(53,N'Toner Thayers 355ml', 53, 53, N'Chai', 150000, 220000, 90, '2026-04-30', N'Toner dưỡng da không cồn'),
+(54,N'Bộ bút màu 24 màu Crayola', 54, 54, N'Hộp', 80000, 120000, 200, NULL, N'Bút màu an toàn cho trẻ'),
+(55,N'Bóng đá Mitre', 55, 55, N'Quả', 150000, 250000, 100, NULL, N'Bóng đá chất lượng cao'),
+(56,N'Sữa dưỡng thể Nivea 400ml', 56, 56, N'Chai', 100000, 150000, 120, '2026-06-30', N'Sữa dưỡng thể dưỡng ẩm'),
+(57,N'Loa Bluetooth JBL Flip 5', 57, 57, N'Chiếc', 1500000, 2000000, 40, NULL, N'Loa Bluetooth âm thanh chất lượng'),
+(58,N'Bánh snack Lay’s 100g', 58, 58, N'Gói', 15000, 25000, 300, '2025-10-31', N'Bánh snack giòn tan'),
+(59,N'Quần short nam Adidas', 59, 59, N'Chiếc', 200000, 350000, 90, NULL, N'Quần short thể thao thoải mái'),
+(60,N'Sách Sapiens', 60, 60, N'Cuốn', 100000, 150000, 110, NULL, N'Sách lịch sử nhân loại'),
+(61,N'Bộ đồ chơi bác sĩ trẻ em', 61, 61, N'Bộ', 200000, 350000, 80, NULL, N'Đồ chơi bác sĩ an toàn'),
+(62,N'Serum The Ordinary Niacinamide', 62, 62, N'Chai', 200000, 300000, 100, '2026-05-31', N'Serum dưỡng da hiệu quả'),
+(63,N'Bút highlighter Stabilo', 63, 63, N'Cây', 20000, 35000, 250, NULL, N'Bút highlighter màu sắc tươi sáng'),
+(64,N'Mũ bóng chày Nike', 64, 64, N'Chiếc', 150000, 250000, 80, NULL, N'Mũ bóng chày thời trang'),
+(65,N'Nước súc miệng Listerine 500ml', 65, 65, N'Chai', 80000, 120000, 150, '2026-03-31', N'Nước súc miệng diệt khuẩn'),
+(66,N'Máy lọc không khí Xiaomi', 66, 66, N'Chiếc', 2000000, 3000000, 30, NULL, N'Máy lọc không khí thông minh'),
+(67,N'Trà xanh C2 500ml', 67, 67, N'Thùng', 90000, 140000, 200, '2025-11-15', N'Trà xanh giải khát'),
+(68,N'Áo khoác gió Columbia', 68, 68, N'Chiếc', 500000, 800000, 60, NULL, N'Áo khoác gió chống thấm'),
+(69,N'Sách 7 Thói Quen Hiệu Quả', 69, 69, N'Cuốn', 80000, 120000, 100, NULL, N'Sách phát triển bản thân'),
+(70,N'Bộ đồ chơi siêu nhân', 70, 70, N'Bộ', 250000, 400000, 70, NULL, N'Đồ chơi siêu nhân hấp dẫn'),
+(71,N'Kem dưỡng ẩm CeraVe 340g', 71, 71, N'Hũ', 250000, 350000, 80, '2026-07-31', N'Kem dưỡng ẩm cho da khô'),
+(72,N'Bút gel Muji', 72, 72, N'Cây', 20000, 35000, 300, NULL, N'Bút gel mực mịn'),
+(73,N'Gậy bóng chày Louisville', 73, 73, N'Cây', 400000, 600000, 50, NULL, N'Gậy bóng chày chất lượng'),
+(74,N'Sữa rửa tay Method 300ml', 74, 74, N'Chai', 60000, 90000, 120, '2026-04-30', N'Sữa rửa tay tự nhiên'),
+(75,N'Tai nghe Sony WH-1000XM5', 75, 75, N'Chiếc', 5000000, 7000000, 20, NULL, N'Tai nghe chống ồn cao cấp'),
+(76,N'Bánh trung thu Kinh Đô', 76, 76, N'Hộp', 200000, 300000, 100, '2025-09-30', N'Bánh trung thu truyền thống'),
+(77,N'Áo polo nam Lacoste', 77, 77, N'Chiếc', 300000, 500000, 80, NULL, N'Áo polo cao cấp'),
+(78,N'Sách Harry Potter', 78, 78, N'Cuốn', 120000, 180000, 120, NULL, N'Tiểu thuyết giả tưởng nổi tiếng'),
+(79,N'Đồ chơi máy bay điều khiển', 79, 79, N'Chiếc', 300000, 450000, 60, NULL, N'Máy bay điều khiển từ xa'),
+(80,N'Sữa tắm Olay 650ml', 80, 80, N'Chai', 90000, 140000, 100, '2026-06-30', N'Sữa tắm dưỡng da mềm mại'),
+(81,N'Máy ảnh Canon EOS M50', 81, 81, N'Chiếc', 8000000, 11000000, 15, NULL, N'Máy ảnh mirrorless chất lượng'),
+(82,N'Nước tăng lực Red Bull 250ml', 82, 82, N'Thùng', 150000, 220000, 150, '2025-12-31', N'Nước tăng lực mạnh mẽ'),
+(83,N'Quần tây nam Canifa', 83, 83, N'Chiếc', 250000, 400000, 90, NULL, N'Quần tây công sở lịch lãm'),
+(84,N'Sách Thinking, Fast and Slow', 84, 84, N'Cuốn', 100000, 150000, 110, NULL, N'Sách tâm lý học sâu sắc'),
+(85,N'Bộ đồ chơi xây dựng', 85, 85, N'Bộ', 200000, 350000, 80, NULL, N'Đồ chơi xây dựng sáng tạo'),
+(86,N'Son dưỡng môi Burt’s Bees', 86, 86, N'Thỏi', 80000, 120000, 150, '2026-05-31', N'Son dưỡng môi tự nhiên'),
+(87,N'Bút bi Pilot', 87, 87, N'Cây', 15000, 25000, 400, NULL, N'Bút bi mực đều'),
+(88,N'Bóng rổ Spalding', 88, 88, N'Quả', 200000, 350000, 70, NULL, N'Bóng rổ chất lượng cao'),
+(89,N'Nước rửa chén Seventh Generation', 89, 89, N'Chai', 70000, 100000, 120, '2026-04-30', N'Nước rửa chén thân thiện môi trường'),
+(90,N'Máy in HP LaserJet', 90, 90, N'Chiếc', 3000000, 4500000, 20, NULL, N'Máy in laser hiệu quả'),
+(91,N'Sữa chua Vinamilk 100g', 91, 91, N'Hộp', 5000, 10000, 500, '2025-11-30', N'Sữa chua bổ dưỡng'),
+(92,N'Áo blazer nữ Mango', 92, 92, N'Chiếc', 400000, 600000, 60, NULL, N'Áo blazer thời trang công sở'),
+(93,N'Sách The Alchemist', 93, 93, N'Cuốn', 60000, 100000, 130, NULL, N'Tiểu thuyết truyền cảm hứng'),
+(94,N'Đồ chơi tàu hỏa trẻ em', 94, 94, N'Bộ', 250000, 400000, 70, NULL, N'Đồ chơi tàu hỏa thú vị'),
+(95,N'Kem dưỡng da Neutrogena 50ml', 95, 95, N'Hũ', 200000, 300000, 90, '2026-06-30', N'Kem dưỡng da dịu nhẹ'),
+(96,N'Bút chì màu Prismacolor', 96, 96, N'Hộp', 300000, 450000, 100, NULL, N'Bút chì màu chuyên nghiệp'),
+(97,N'Vợt cầu lông Yonex', 97, 97, N'Cây', 500000, 800000, 50, NULL, N'Vợt cầu lông chất lượng'),
+(98,N'Sữa tắm Palmolive 750ml', 98, 98, N'Chai', 80000, 120000, 120, '2026-05-31', N'Sữa tắm thơm mát'),
+(99,N'Đồng hồ thông minh Apple Watch', 99, 99, N'Chiếc', 6000000, 9000000, 25, NULL, N'Đồng hồ thông minh cao cấp'),
+(100,N'Bánh gạo Orion 200g', 100, 100, N'Gói', 20000, 35000, 200, '2025-11-15', N'Bánh gạo giòn ngon');
+
 
 -- Bảng KhuyenMai
 INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VALUES
@@ -810,7 +807,7 @@ INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VA
 (N'Giảm giá cho sản phẩm chăm sóc sức khỏe', '2026-02-15', '2026-02-25', 18.00, N'Giảm 18% cho sản phẩm chăm sóc sức khỏe'),
 (N'Khuyến mãi ngày hội trẻ em', '2026-06-01', '2026-06-03', 20.00, N'Giảm 20% cho tất cả sản phẩm dành cho trẻ em'),
 (N'Giảm giá cho sản phẩm đồ uống giải nhiệt', '2025-07-15', '2025-07-25', 10.00, N'Giảm 10% cho đồ uống giải nhiệt mùa hè'),
-(N'Giảm giá cho sản phẩm đồ trang trí nội thất', '2025-12-15', '2025-12-25', 25.00, N'Giảm 25% cho đồ trang trí nội thất'),
+(N'Giảm giá cho sản phẩm đồ trang trí', '2025-12-15', '2025-12-25', 25.00, N'Giảm 25% cho đồ trang trí nội thất'),
 (N'Khuyến mãi ngày hội mua sắm online', '2025-08-01', '2025-08-10', 15.00, N'Giảm 15% cho đơn hàng đặt qua ứng dụng'),
 (N'Giảm giá cho sản phẩm đồ dùng cá nhân', '2026-03-01', '2026-03-10', 12.00, N'Giảm 12% cho các sản phẩm đồ dùng cá nhân'),
 (N'Giảm giá cho sản phẩm thời trang nữ', '2025-09-20', '2025-09-30', 20.00, N'Giảm 20% cho tất cả sản phẩm thời trang nữ'),
@@ -824,7 +821,7 @@ INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VA
 (N'Giảm giá cho sản phẩm đồ chơi lắp ráp', '2025-07-20', '2025-07-30', 15.00, N'Giảm 15% cho đồ chơi lắp ráp'),
 (N'Giảm giá cho sản phẩm thực phẩm hữu cơ', '2026-03-15', '2026-03-25', 18.00, N'Giảm 18% cho thực phẩm hữu cơ'),
 (N'Khuyến mãi ngày hội môi trường', '2026-06-05', '2026-06-07', 15.00, N'Giảm 15% cho sản phẩm thân thiện môi trường'),
-(N'Giảm giá cho sản phẩm phụ kiện thời trang', '2025-09-15', '2025-09-25', 20.00, N'Giảm 20% cho các phụ kiện thời trang'),
+(N'Giảm giá phụ kiện thời trang', '2025-09-15', '2025-09-25', 20.00, N'Giảm 20% cho các phụ kiện thời trang'),
 (N'Giảm giá cho sản phẩm đồ điện gia dụng', '2025-12-01', '2025-12-10', 25.00, N'Giảm 25% cho đồ điện gia dụng'),
 (N'Khuyến mãi ngày hội công nghệ thông tin', '2026-01-20', '2026-01-25', 30.00, N'Giảm 30% cho sản phẩm công nghệ thông tin'),
 (N'Giảm giá cho sản phẩm đồ chơi giáo dục', '2025-06-01', '2025-06-10', 15.00, N'Giảm 15% cho đồ chơi giáo dục'),
@@ -834,119 +831,116 @@ INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VA
 (N'Giảm giá cho sản phẩm đồ chơi sáng tạo', '2025-07-01', '2025-07-15', 18.00, N'Giảm 18% cho đồ chơi sáng tạo'),
 (N'Khuyến mãi ngày hội sức khỏe cộng đồng', '2026-04-07', '2026-04-10', 20.00, N'Giảm 20% cho sản phẩm chăm sóc sức khỏe'),
 (N'Giảm giá cho sản phẩm đồ dùng học sinh', '2025-08-15', '2025-08-25', 10.00, N'Giảm 10% cho đồ dùng học sinh'),
-(N'Giảm giá cho sản phẩm thời trang thể thao', '2025-09-01', '2025-09-10', 15.00, N'Giảm 15% cho thời trang thể thao'),
+(N'Giảm giá thời trang thể thao', '2025-09-01', '2025-09-10', 15.00, N'Giảm 15% cho thời trang thể thao'),
 (N'Khuyến mãi ngày hội công nghệ xanh', '2026-06-05', '2026-06-08', 25.00, N'Giảm 25% cho sản phẩm công nghệ thân thiện môi trường'),
 (N'Giảm giá cho sản', '2025-12-15', '2025-12-25', 20.00, N'Giảm 20% cho tất cả sản phẩm trang trí nhà cửa'),
 (N'Giảm giá cho sản phẩm đồ chơi nhập khẩu', '2025-06-20', '2025-06-30', 18.00, N'Giảm 18% cho đồ chơi nhập khẩu'),
 (N'Khuyến mãi ngày hội du lịch', '2026-07-01', '2026-07-05', 15.00, N'Giảm 15% cho sản phẩm du lịch và dã ngoại'),
-(N'Giảm giá cho sản phẩm thực phẩm đông lạnh', '2025-11-15', '2025-11-25', 12.00, N'Giảm 12% cho thực phẩm đông lạnh'),
+(N'Giảm giá phẩm đông lạnh', '2025-11-15', '2025-11-25', 12.00, N'Giảm 12% cho thực phẩm đông lạnh'),
 (N'Giảm giá cho sản phẩm đồ dùng thể thao', '2025-08-01', '2025-08-10', 20.00, N'Giảm 20% cho đồ dùng thể thao'),
 (N'Khuyến mãi ngày hội sáng tạo', '2026-03-01', '2026-03-05', 25.00, N'Giảm 25% cho sản phẩm hỗ trợ sáng tạo');
 
--- Bảng ChiTietKhuyenMai
 INSERT INTO ChiTietKhuyenMai (MaKM, MaSP) VALUES
 (1, 1),
-(1, 2),
-(2, 3),
-(2, 4),
-(3, 5),
-(3, 6),
+(2, 2),
+(3, 3),
+(4, 3),
+(5, 4),
+(6, 5),
+(4, 6),
 (4, 7),
-(4, 8),
+(5, 8),
 (5, 9),
-(5, 10),
+(6, 10),
 (6, 11),
-(6, 12),
+(7, 12),
 (7, 13),
-(7, 14),
+(8, 14),
 (8, 15),
-(8, 16),
+(9, 16),
 (9, 17),
-(9, 18),
+(10, 18),
 (10, 19),
-(10, 20),
+(11, 20),
 (11, 21),
-(11, 22),
+(12, 22),
 (12, 23),
-(12, 24),
+(13, 24),
 (13, 25),
-(13, 26),
+(14, 26),
 (14, 27),
-(14, 28),
+(15, 28),
 (15, 29),
-(15, 30),
+(16, 30),
 (16, 31),
-(16, 32),
+(17, 32),
 (17, 33),
-(17, 34),
+(18, 34),
 (18, 35),
-(18, 36),
+(19, 36),
 (19, 37),
-(19, 38),
+(20, 38),
 (20, 39),
-(20, 40),
+(21, 40),
 (21, 41),
-(21, 42),
+(22, 42),
 (22, 43),
-(22, 44),
+(23, 44),
 (23, 45),
-(23, 46),
+(24, 46),
 (24, 47),
-(24, 48),
+(25, 48),
 (25, 49),
-(25, 50),
+(26, 50),
 (26, 51),
-(26, 52),
+(27, 52),
 (27, 53),
-(27, 54),
+(28, 54),
 (28, 55),
-(28, 56),
+(29, 56),
 (29, 57),
-(29, 58),
+(30, 58),
 (30, 59),
-(30, 60),
+(31, 60),
 (31, 61),
-(31, 62),
+(32, 62),
 (32, 63),
-(32, 64),
+(33, 64),
 (33, 65),
-(33, 66),
+(34, 66),
 (34, 67),
-(34, 68),
+(35, 68),
 (35, 69),
-(35, 70),
+(36, 70),
 (36, 71),
-(36, 72),
+(37, 72),
 (37, 73),
-(37, 74),
+(38, 74),
 (38, 75),
-(38, 76),
+(39, 76),
 (39, 77),
-(39, 78),
+(40, 78),
 (40, 79),
-(40, 80),
-(41, 81),
-(41, 82),
-(42, 83),
-(42, 84),
-(43, 85),
-(43, 86),
-(44, 87),
-(44, 88),
-(45, 89),
-(45, 90),
-(46, 91),
-(46, 92),
-(47, 93),
-(47, 94),
-(48, 95),
-(48, 96),
-(49, 97),
-(49, 98),
-(50, 99),
-(50, 100);
-
-
+(41, 80),
+(41, 62),
+(42, 63),
+(42, 64),
+(43, 65),
+(43, 66),
+(44, 67),
+(44, 68),
+(45, 69),
+(45, 70),
+(46, 71),
+(46, 72),
+(47, 73),
+(47, 74),
+(48, 75),
+(48, 76),
+(49, 77),
+(49, 78),
+(50, 79),
+(50, 80);
 -- Bảng HoaDonBan
 INSERT INTO HoaDonBan (MaNV, MaKH, NgayBan, TongTien, DiemSuDung) VALUES
 (1, 1, GETDATE(), 11400000, 0),
@@ -1208,7 +1202,7 @@ INSERT INTO ChiTietPhieuKiemKho (MaPhieuKK, MaSP, SoLuongThucTe, SoLuongHeThong,
  
  go
 -----------------------------------------------------query truy vấn các thành phần trong bảng -------------------------------------
-
+/*
 ----- tạo bảng view
 
 ---danh sach nhan vien
@@ -1588,3 +1582,4 @@ END
 GO
 
 ---------------------------------------------------------------end----------------------------------------
+*/
