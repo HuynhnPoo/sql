@@ -3,14 +3,14 @@
 
 -----------------------------------------------------tạo database--------------------------------------------
 create database QLCHTL
-ON(
+on(
 	NAME='QLCHTL_DATA',
 	FILENAME ='D:\QLCHTL_DATA.mdf',
 	SIZE=10MB,
 	MAXSIZE=100MB,
 	FILEGROWTH=5MB
 )
-LOG ON(
+LOG on(
 	NAME='QLCHTL_log',
 	FILENAME ='D:\QLCHTL_DATA.ldf',
 	SIZE=10MB,
@@ -26,109 +26,109 @@ go
 
 --- Bảng NhanVien
 create table NhanVien (
-    MaNV INT IDENTITY(1,1) PRIMARY KEY,
-    HoTen NVARCHAR(255),
-    NgaySinh DATE,
-    GioiTinh NVARCHAR(10) CHECK (GioiTinh IN (N'Nam', N'Nữ')),
-    DiaChi NVARCHAR(255),
-   SDT VARCHAR(20) NOT NULL ,
-   Email VARCHAR(255) ,
-    ChucVu NVARCHAR(50) NOT NULL,
-    NgayVaoLam DATE,
+    MaNV int identity(1,1)primary key,
+    HoTen nvarchar(255),
+    NgaySinh date,
+    GioiTinh nvarchar(10) CHECK (GioiTinh IN (N'Nam', N'Nữ')),
+    DiaChi nvarchar(255),
+   SDT varchar(20) NOT NULL ,
+   Email varchar(255) ,
+    ChucVu nvarchar(50) NOT NULL,
+    NgayVaoLam date,
      Luong DECIMAL(10, 2) CHECK (Luong > 0)
 );
 
 -- Bảng KhachHang
 create table KhachHang (
-    MaKH INT IDENTITY(1,1) PRIMARY KEY,
-    HoTen NVARCHAR(255) NOT NULL,
-    SDT VARCHAR(20) NOT NULL ,
-    DiaChi NVARCHAR(255),
-    Email VARCHAR(255) ,
-    DiemTichLuy INT DEFAULT 0
+    MaKH int identity(1,1)primary key,
+    HoTen nvarchar(255) NOT NULL,
+    SDT varchar(20) NOT NULL ,
+    DiaChi nvarchar(255),
+    Email varchar(255) ,
+    DiemTichLuy int DEFAULT 0
 );
 
 -- Bảng NhaCungCap
 create table NhaCungCap (
-    MaNCC INT IDENTITY(1,1) PRIMARY KEY,
-    TenNCC NVARCHAR(255) NOT NULL ,
-    DiaChi NVARCHAR(255),
-    SDT VARCHAR(20) ,
-    Email VARCHAR(255) 
+    MaNCC int identity(1,1)primary key,
+    TenNCC nvarchar(255) NOT NULL ,
+    DiaChi nvarchar(255),
+    SDT varchar(20) ,
+    Email varchar(255) 
 );
 
 -- Bảng LoaiSanPham
 create table LoaiSanPham (
-    MaLoaiSP INT IDENTITY(1,1) PRIMARY KEY,
-    TenLoaiSP NVARCHAR(255) NOT NULL,
-    MoTa NVARCHAR(MAX)
+    MaLoaiSP int identity(1,1)primary key,
+    TenLoaiSP nvarchar(255) NOT NULL,
+    MoTa nvarchar(MAX)
 );
 
 -- Bảng SanPham
 create table SanPham (
-    MasP INT  PRIMARY KEY,
-    TenSP NVARCHAR(255) NOT NULL,
-    MaLoaiSP INT NOT NULL,
-    MaNCC INT NOT NULL,
-    DonViTinh NVARCHAR(50) NOT NULL,
+    MasP int primary key,
+    TenSP nvarchar(255) NOT NULL,
+    MaLoaiSP int NOT NULL,
+    MaNCC int NOT NULL,
+    DonViTinh nvarchar(50) NOT NULL,
     GiaNhap DECIMAL(10, 2) NOT NULL CHECK (GiaNhap >= 0),
     GiaBan DECIMAL(10, 2) NOT NULL CHECK (GiaBan >= 0),
-    SoLuongTonKho INT NOT NULL CHECK (SoLuongTonKho >= 0) DEFAULT 0,
-    HanSuDung DATE,
-    MoTa NVARCHAR(MAX),
+    SoLuongTonKho int NOT NULL CHECK (SoLuongTonKho >= 0) DEFAULT 0,
+    HanSuDung date,
+    MoTa nvarchar(MAX),
     FOREIGN KEY (MaLoaiSP) REFERENCES LoaiSanPham(MaLoaiSP),
     FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC)
 );
 
 -- Bảng KhuyenMai
 create table KhuyenMai (
-    MaKM INT IDENTITY(1,1) PRIMARY KEY,
-    TenKM NVARCHAR(40),
-    NgayBatDau DATE,
-    NgayKetThuc DATE,
+    MaKM int identity(1,1)primary key,
+    TenKM nvarchar(40),
+    NgayBatDau date,
+    NgayKetThuc date,
     PhanTramGiamGia DECIMAL(5, 2) CHECK (PhanTramGiamGia BETWEEN 0 AND 100),
-    MoTa NVARCHAR(MAX)
+    MoTa nvarchar(MAX)
 );
 
 -- Bảng ChiTietKhuyenMai
 create table ChiTietKhuyenMai (
-    MaKM INT NOT NULL,
-    MasP INT NOT NULL,
-    PRIMARY KEY (MaKM, MasP),
+    MaKM int NOT NULL,
+    MasP int NOT NULL,
+   primary key (MaKM, MasP),
     FOREIGN KEY (MaKM) REFERENCES KhuyenMai(MaKM),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 
 -- Bảng HoaDonBan
 create table HoaDonBan (
-    MaHDBan INT IDENTITY(1,1) PRIMARY KEY,
-    MaNV INT NOT NULL,
-    MaKH INT NOT NULL,
-    NgayBan DATETIME DEFAULT GETDATE(),
+    MaHDBan int identity(1,1)primary key,
+    MaNV int NOT NULL,
+    MaKH int NOT NULL,
+    NgayBan dateTIME DEFAULT GETdate(),
     TongTien DECIMAL(10, 2) NOT NULL CHECK (TongTien >= 0),
-    DiemSuDung INT DEFAULT 0 CHECK (DiemSuDung >= 0),
+    DiemSuDung int DEFAULT 0 CHECK (DiemSuDung >= 0),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
 );
 
 -- Bảng ChiTietHDBan
 create table ChiTietHDBan (
-    MaHDBan INT NOT NULL,
-    MasP INT NOT NULL,
-      SoLuong INT NOT NULL CHECK (SoLuong > 0),
+    MaHDBan int NOT NULL,
+    MasP int NOT NULL,
+      SoLuong int NOT NULL CHECK (SoLuong > 0),
     DonGia DECIMAL(10, 2) NOT NULL CHECK (DonGia >= 0),
     ThanhTien DECIMAL(10, 2) NOT NULL CHECK (ThanhTien >= 0),
-    PRIMARY KEY (MaHDBan, MasP),
+   primary key (MaHDBan, MasP),
     FOREIGN KEY (MaHDBan) REFERENCES HoaDonBan(MaHDBan),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 
 -- Bảng HoaDonNhap
 create table HoaDonNhap (
-    MaHDNhap INT IDENTITY(1,1) PRIMARY KEY,
-    MaNV INT NOT NULL,
-    MaNCC INT NOT NULL,
-    NgayNhap DATETIME NOT NULL DEFAULT GETDATE(),
+    MaHDNhap int identity(1,1)primary key,
+    MaNV int NOT NULL,
+    MaNCC int NOT NULL,
+    NgayNhap dateTIME NOT NULL DEFAULT GETdate(),
     TongTien DECIMAL(10, 2) NOT NULL CHECK (TongTien >= 0),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
     FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC)
@@ -136,33 +136,33 @@ create table HoaDonNhap (
 
 -- Bảng ChiTietHDNhap
 create table ChiTietHDNhap (
-   MaHDNhap INT NOT NULL,
-    MasP INT NOT NULL,
-    SoLuong INT NOT NULL CHECK (SoLuong > 0),
+   MaHDNhap int NOT NULL,
+    MasP int NOT NULL,
+    SoLuong int NOT NULL CHECK (SoLuong > 0),
     DonGia DECIMAL(10, 2) NOT NULL CHECK (DonGia >= 0),
     ThanhTien DECIMAL(10, 2) NOT NULL CHECK (ThanhTien >= 0),
-    PRIMARY KEY (MaHDNhap, MasP),
+   primary key (MaHDNhap, MasP),
     FOREIGN KEY (MaHDNhap) REFERENCES HoaDonNhap(MaHDNhap),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
 
 -- Bảng PhieuKiemKho
 create table PhieuKiemKho (
-    MaPhieuKK INT IDENTITY(1,1) PRIMARY KEY,
-    MaNV INT NOT NULL,
-    NgayKiemKho DATETIME NOT NULL DEFAULT GETDATE(),
-    MoTa NVARCHAR(MAX),
+    MaPhieuKK int identity(1,1)primary key,
+    MaNV int NOT NULL,
+    NgayKiemKho dateTIME NOT NULL DEFAULT GETdate(),
+    MoTa nvarchar(MAX),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
 );
 
 -- Bảng ChiTietPhieuKiemKho
 create table ChiTietPhieuKiemKho (
-     MaPhieuKK INT NOT NULL,
-    MasP INT NOT NULL,
-    SoLuongThucTe INT NOT NULL CHECK (SoLuongThucTe >= 0),
-    SoLuongHeThong INT NOT NULL CHECK (SoLuongHeThong >= 0),
-    ChenhLech INT NOT NULL,
-    PRIMARY KEY (MaPhieuKK, MasP),
+     MaPhieuKK int NOT NULL,
+    MasP int NOT NULL,
+    SoLuongThucTe int NOT NULL CHECK (SoLuongThucTe >= 0),
+    SoLuongHeThong int NOT NULL CHECK (SoLuongHeThong >= 0),
+    ChenhLech int NOT NULL,
+   primary key (MaPhieuKK, MasP),
     FOREIGN KEY (MaPhieuKK) REFERENCES PhieuKiemKho(MaPhieuKK),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
@@ -170,7 +170,7 @@ go
 
 -----------------------------------------------------thêm dữ liệu vào bảng --------------------------------------------
 -- Bảng NhanVien
-INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, NgayVaoLam, Luong) VALUES
+insert into NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, NgayVaoLam, Luong) VALUES
 (N'Nguyễn Văn A', '1990-05-15', N'Nam', N'Hà Nội', '090123467', 'annguyen@email.com', N'Quản lý', '2020-08-01', 15000000),
 (N'Trần Thị B', '1992-11-20', N'Nữ', N'Hà Nội', '098765321', 'btran@email.com', N'Nhân viên bán hàng', '2021-03-10', 8000000),
 (N'Lê Văn C', '1988-07-05', N'Nam', N' Hà Nội', '091245678', 'cle@email.com', N'Kế toán', '2022-01-15', 10000000),
@@ -323,7 +323,7 @@ INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, Nga
 (N'Đặng Thị Loan', '1994-02-02', N'Nữ', N'Vĩnh Phúc', '0924123421', 'loan.dang@gmail.com', N'Nhân viên phân tích dữ liệu', '2024-05-01', 10100000);
 
 -- Bảng KhachHang
-INSERT INTO KhachHang (HoTen, SDT, DiaChi, Email, DiemTichLuy) VALUES
+insert into KhachHang (HoTen, SDT, DiaChi, Email, DiemTichLuy) VALUES
 (N'Lê Thị M', '093123456', N'30 Đường Bà Triệu, Hà Nội', 'mle@email.com', 150),
 (N'Phan Văn N', '0988765432', N'60 Phố Tràng Thi, Hà Nội', 'n.phan@email.com', 200),
 (N'Hoàng Thị O', '0911223344', N'90 Đường Hai Bà Trưng, Hà Nội', 'o.hoang@email.com', 100),
@@ -426,7 +426,7 @@ INSERT INTO KhachHang (HoTen, SDT, DiaChi, Email, DiemTichLuy) VALUES
 (N'Hà Văn V', '098111233', N'300 Đường Láng Hạ, Hà Nội', 'v.ha@email.com', 170);
 
 -- Bảng NhaCungCap
-INSERT INTO NhaCungCap (TenNCC, DiaChi, SDT, Email) VALUES
+insert into NhaCungCap (TenNCC, DiaChi, SDT, Email) VALUES
 
 (N'Công ty ABC', N'Khu công nghiệp X, Hà Nội', '024123467', 'info@abc.com'),
 (N'Nhà cung cấp XYZ', N'Khu công nghiệp Y, Hà Nội', '0249876543', 'sales@xyz.vn'),
@@ -531,7 +531,7 @@ INSERT INTO NhaCungCap (TenNCC, DiaChi, SDT, Email) VALUES
 
 
 -- Bảng LoaiSanPham
-INSERT INTO LoaiSanPham (TenLoaiSP, MoTa) VALUES
+insert into LoaiSanPham (TenLoaiSP, MoTa) VALUES
 (N'Điện tử', N'Các sản phẩm điện tử gia dụng và cá nhân'),
 (N'Gia dụng', N'Đồ dùng trong nhà'),
 (N'Thực phẩm', N'Các loại thực phẩm và đồ uống'),
@@ -577,7 +577,7 @@ INSERT INTO LoaiSanPham (TenLoaiSP, MoTa) VALUES
 (N'Thiết bị an ninh', N'Camera giám sát, khóa thông minh'),
 (N'Thực phẩm chế biến sẵn', N'Thực phẩm đóng hộp và chế biến sẵn'),
 (N'Phụ kiện thời trang', N'Túi xách, thắt lưng và khăn choàng'),
-(N'Đồ chơi lắp ráp', N'Đồ chơi lắp ráp như LEGO và mô hình'),
+(N'Đồ chơi lắp ráp', N'Đồ chơi lắp ráp như LEgo và mô hình'),
 (N'Sản phẩm chăm sóc môi', N'Son dưỡng và sản phẩm chăm sóc môi'),
 (N'Thiết bị lưu trữ', N'USB, ổ cứng ngoài và thẻ nhớ'),
 (N'Đồ dùng bơi lội', N'Áo bơi, kính bơi và phụ kiện bơi lội'),
@@ -634,7 +634,7 @@ INSERT INTO LoaiSanPham (TenLoaiSP, MoTa) VALUES
 (N'Sản phẩm chăm sóc da nhạy cảm', N'Sản phẩm dành cho da nhạy cảm');
 
 -- Bảng SanPham
-INSERT INTO SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, SoLuongTonKho, HanSuDung, MoTa) VALUES
+insert into SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, SoLuongTonKho, HanSuDung, MoTa) VALUES
 (1,N'Tivi Samsung Smart 4K 55 inch', 1, 1, N'Chiếc', 8000000, 12000000, 50, NULL, N'Tivi thông minh màn hình lớn'),
 (2,N'Nồi cơm điện Sharp 1.8L', 2, 2, N'Chiếc', 300000, 500000, 100, NULL, N'Nồi cơm điện dung tích lớn'),
 (3,N'Mì gói Hảo Hảo', 3, 3, N'Thùng', 60000, 90000, 200, '2025-07-30', N'Mì ăn liền phổ biến'),
@@ -669,7 +669,7 @@ INSERT INTO SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, So
 (32,N'Bánh mì sandwich Kinh Đô', 32, 32, N'Gói', 25000, 40000, 200, '2025-09-15', N'Bánh mì mềm thơm'),
 (33,N'Váy maxi nữ thời trang', 33, 33, N'Chiếc', 200000, 350000, 80, NULL, N'Váy maxi nhẹ nhàng, thanh lịch'),
 (34,N'Sách Hài Hước Một Chút', 34, 34, N'Cuốn', 40000, 70000, 130, NULL, N'Sách hài hước giải trí'),
-(35,N'Đồ chơi xếp hình LEGO 500 mảnh', 35, 35, N'Hộp', 300000, 450000, 70, NULL, N'Xếp hình sáng tạo cho trẻ'),
+(35,N'Đồ chơi xếp hình LEgo 500 mảnh', 35, 35, N'Hộp', 300000, 450000, 70, NULL, N'Xếp hình sáng tạo cho trẻ'),
 (36,N'Son môi L’Oreal Paris', 36, 36, N'Thỏi', 120000, 180000, 100, '2026-02-28', N'Son môi màu sắc thời thượng'),
 (37,N'Tẩy bút chì Pelikan', 37, 37, N'Cục', 10000, 20000, 600, NULL, N'Tẩy sạch, không để lại vết'),
 (38,N'Nước tẩy trang Bioderma 500ml', 38, 38, N'Chai', 250000, 350000, 80, '2026-05-31', N'Nước tẩy trang dịu nhẹ'),
@@ -680,7 +680,7 @@ INSERT INTO SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, So
 (43,N'Bộ đồ chơi nấu ăn trẻ em', 43, 43, N'Bộ', 150000, 250000, 85, NULL, N'Đồ chơi nấu ăn an toàn'),
 (44,N'Mặt nạ dưỡng da Innisfree', 44, 44, N'Miếng', 15000, 25000, 300, '2026-03-31', N'Mặt nạ dưỡng da tự nhiên'),
 (45,N'Bút mực Parker', 45, 45, N'Cây', 500000, 800000, 50, NULL, N'Bút mực cao cấp'),
-(46,N'Giày chạy bộ Asics', 46, 46, N'Đôi', 600000, 900000, 60, NULL, N'Giày chạy bộ êm ái'),
+(46,N'Giày chạy bộ asics', 46, 46, N'Đôi', 600000, 900000, 60, NULL, N'Giày chạy bộ êm ái'),
 (47,N'Xà phòng rửa tay Lifebuoy 500ml', 47, 47, N'Chai', 40000, 60000, 150, '2026-07-31', N'Xà phòng diệt khuẩn'),
 (48,N'Máy hút bụi Dyson', 48, 48, N'Chiếc', 4000000, 6000000, 25, NULL, N'Máy hút bụi không dây mạnh mẽ'),
 (49,N'Kẹo dẻo Haribo 200g', 49, 49, N'Gói', 30000, 50000, 200, '2025-12-15', N'Kẹo dẻo trái cây ngon'),
@@ -738,7 +738,7 @@ INSERT INTO SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, So
 
 
 -- Bảng KhuyenMai
-INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VALUES
+insert into KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VALUES
 (N'Giảm giá cuối tuần', '2025-04-12', '2025-04-13', 15.00, N'Giảm 15% cho tất cả sản phẩm vào cuối tuần'),
 (N'Khuyến mãi tháng 5', '2025-05-01', '2025-05-31', 10.00, N'Giảm 10% cho đơn hàng trên 500.000 VNĐ'),
 (N'Mua 1 tặng 1', '2025-04-15', '2025-04-20', NULL, N'Mua một sản phẩm tặng một sản phẩm cùng loại'),
@@ -840,7 +840,7 @@ INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VA
 (N'Giảm giá cho sản phẩm đồ dùng thể thao', '2025-08-01', '2025-08-10', 20.00, N'Giảm 20% cho đồ dùng thể thao'),
 (N'Khuyến mãi ngày hội sáng tạo', '2026-03-01', '2026-03-05', 25.00, N'Giảm 25% cho sản phẩm hỗ trợ sáng tạo');
 
-INSERT INTO ChiTietKhuyenMai (MaKM, MaSP) VALUES
+insert into ChiTietKhuyenMai (MaKM, MasP) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
@@ -942,110 +942,110 @@ INSERT INTO ChiTietKhuyenMai (MaKM, MaSP) VALUES
 (50, 79),
 (50, 80);
 -- Bảng HoaDonBan
-INSERT INTO HoaDonBan (MaNV, MaKH, NgayBan, TongTien, DiemSuDung) VALUES
-(1, 1, GETDATE(), 11400000, 0),
-(2, 2, DATEADD(day, -1, GETDATE()), 450000, 10),
-(3, 3, DATEADD(day, -2, GETDATE()), 72000, 5),
-(4, 4, DATEADD(day, -3, GETDATE()), 225000, 15),
-(5, 5, DATEADD(day, -4, GETDATE()), 315000, 0),
-(6, 6, DATEADD(day, -5, GETDATE()), 108000, 20),
-(7, 7, DATEADD(day, -6, GETDATE()), 84000, 0),
-(8, 8, DATEADD(day, -7, GETDATE()), 36000, 10),
-(9, 9, DATEADD(day, -8, GETDATE()), 760000, 25),
-(10, 10, DATEADD(day, -9, GETDATE()), 31500, 0),
-(11, 11, DATEADD(day, -10, GETDATE()), 1500000, 10),
-(12, 12, DATEADD(day, -11, GETDATE()), 85000, 0),
-(13, 13, DATEADD(day, -12, GETDATE()), 320000, 15),
-(14, 14, DATEADD(day, -13, GETDATE()), 9500000, 30),
-(15, 15, DATEADD(day, -14, GETDATE()), 45000, 0),
-(16, 16, DATEADD(day, -15, GETDATE()), 180000, 5),
-(17, 17, DATEADD(day, -16, GETDATE()), 2500000, 20),
-(18, 18, DATEADD(day, -17, GETDATE()), 60000, 0),
-(19, 19, DATEADD(day, -18, GETDATE()), 120000, 10),
-(20, 20, DATEADD(day, -19, GETDATE()), 780000, 25),
-(21, 21, DATEADD(day, -20, GETDATE()), 35000, 0),
-(22, 22, DATEADD(day, -21, GETDATE()), 450000, 15),
-(23, 23, DATEADD(day, -22, GETDATE()), 2000000, 0),
-(24, 24, DATEADD(day, -23, GETDATE()), 95000, 5),
-(25, 25, DATEADD(day, -24, GETDATE()), 300000, 10),
-(26, 26, DATEADD(day, -25, GETDATE()), 15000000, 40),
-(27, 27, DATEADD(day, -26, GETDATE()), 65000, 0),
-(28, 28, DATEADD(day, -27, GETDATE()), 1800000, 20),
-(29, 29, DATEADD(day, -28, GETDATE()), 420000, 15),
-(30, 30, DATEADD(day, -29, GETDATE()), 75000, 0),
-(31, 31, DATEADD(day, -30, GETDATE()), 250000, 10),
-(32, 32, DATEADD(day, -31, GETDATE()), 3200000, 30),
-(33, 33, DATEADD(day, -32, GETDATE()), 85000, 0),
-(34, 34, DATEADD(day, -33, GETDATE()), 150000, 5),
-(35, 35, DATEADD(day, -34, GETDATE()), 600000, 15),
-(36, 36, DATEADD(day, -35, GETDATE()), 45000, 0),
-(37, 37, DATEADD(day, -36, GETDATE()), 900000, 25),
-(38, 38, DATEADD(day, -37, GETDATE()), 120000, 10),
-(39, 39, DATEADD(day, -38, GETDATE()), 3500000, 0),
-(40, 40, DATEADD(day, -39, GETDATE()), 65000, 5),
-(41, 41, DATEADD(day, -40, GETDATE()), 180000, 0),
-(42, 42, DATEADD(day, -41, GETDATE()), 2500000, 20),
-(43, 43, DATEADD(day, -42, GETDATE()), 95000, 10),
-(44, 44, DATEADD(day, -43, GETDATE()), 420000, 15),
-(45, 45, DATEADD(day, -44, GETDATE()), 75000, 0),
-(46, 46, DATEADD(day, -45, GETDATE()), 1500000, 30),
-(47, 47, DATEADD(day, -46, GETDATE()), 320000, 5),
-(48, 48, DATEADD(day, -47, GETDATE()), 85000, 0),
-(49, 49, DATEADD(day, -48, GETDATE()), 600000, 25),
-(50, 50, DATEADD(day, -49, GETDATE()), 120000, 10),
-(51, 51, DATEADD(day, -50, GETDATE()), 9500000, 40),
-(52, 52, DATEADD(day, -51, GETDATE()), 45000, 0),
-(53, 53, DATEADD(day, -52, GETDATE()), 180000, 5),
-(54, 54, DATEADD(day, -53, GETDATE()), 2500000, 20),
-(55, 55, DATEADD(day, -54, GETDATE()), 65000, 0),
-(56, 56, DATEADD(day, -55, GETDATE()), 420000, 15),
-(57, 57, DATEADD(day, -56, GETDATE()), 75000, 10),
-(58, 58, DATEADD(day, -57, GETDATE()), 150000, 0),
-(59, 59, DATEADD(day, -58, GETDATE()), 3200000, 30),
-(60, 60, DATEADD(day, -59, GETDATE()), 85000, 5),
-(61, 61, DATEADD(day, -60, GETDATE()), 600000, 0),
-(62, 62, DATEADD(day, -61, GETDATE()), 120000, 10),
-(63, 63, DATEADD(day, -62, GETDATE()), 1800000, 25),
-(64, 64, DATEADD(day, -63, GETDATE()), 45000, 0),
-(65, 65, DATEADD(day, -64, GETDATE()), 95000, 5),
-(66, 66, DATEADD(day, -65, GETDATE()), 250000, 15),
-(67, 67, DATEADD(day, -66, GETDATE()), 1500000, 20),
-(68, 68, DATEADD(day, -67, GETDATE()), 65000, 0),
-(69, 69, DATEADD(day, -68, GETDATE()), 420000, 10),
-(70, 70, DATEADD(day, -69, GETDATE()), 75000, 5),
-(71, 71, DATEADD(day, -70, GETDATE()), 3200000, 30),
-(72, 72, DATEADD(day, -71, GETDATE()), 85000, 0),
-(73, 73, DATEADD(day, -72, GETDATE()), 180000, 15),
-(74, 74, DATEADD(day, -73, GETDATE()), 600000, 10),
-(75, 75, DATEADD(day, -74, GETDATE()), 120000, 0),
-(76, 76, DATEADD(day, -75, GETDATE()), 9500000, 40),
-(77, 77, DATEADD(day, -76, GETDATE()), 45000, 5),
-(78, 78, DATEADD(day, -77, GETDATE()), 2500000, 20),
-(79, 79, DATEADD(day, -78, GETDATE()), 65000, 0),
-(80, 80, DATEADD(day, -79, GETDATE()), 420000, 15),
-(81, 81, DATEADD(day, -80, GETDATE()), 75000, 10),
-(82, 82, DATEADD(day, -81, GETDATE()), 150000, 0),
-(83, 83, DATEADD(day, -82, GETDATE()), 3200000, 30),
-(84, 84, DATEADD(day, -83, GETDATE()), 85000, 5),
-(85, 85, DATEADD(day, -84, GETDATE()), 180000, 0),
-(86, 86, DATEADD(day, -85, GETDATE()), 600000, 25),
-(87, 87, DATEADD(day, -86, GETDATE()), 120000, 10),
-(88, 88, DATEADD(day, -87, GETDATE()), 9500000, 40),
-(89, 89, DATEADD(day, -88, GETDATE()), 45000, 0),
-(90, 90, DATEADD(day, -89, GETDATE()), 2500000, 20),
-(91, 91, DATEADD(day, -90, GETDATE()), 65000, 5),
-(92, 92, DATEADD(day, -91, GETDATE()), 420000, 15),
-(93, 93, DATEADD(day, -92, GETDATE()), 75000, 0),
-(94, 94, DATEADD(day, -93, GETDATE()), 150000, 10),
-(95, 95, DATEADD(day, -94, GETDATE()), 3200000, 30),
-(96, 96, DATEADD(day, -95, GETDATE()), 85000, 0),
-(97, 97, DATEADD(day, -96, GETDATE()), 180000, 5),
-(98, 98, DATEADD(day, -97, GETDATE()), 600000, 25),
-(99, 99, DATEADD(day, -98, GETDATE()), 120000, 10),
-(100, 100, DATEADD(day, -99, GETDATE()), 9500000, 40);
+insert into HoaDonBan (MaNV, MaKH, NgayBan, TongTien, DiemSuDung) VALUES
+(1, 1, GETdate(), 11400000, 0),
+(2, 2, dateADD(day, -1, GETdate()), 450000, 10),
+(3, 3, dateADD(day, -2, GETdate()), 72000, 5),
+(4, 4, dateADD(day, -3, GETdate()), 225000, 15),
+(5, 5, dateADD(day, -4, GETdate()), 315000, 0),
+(6, 6, dateADD(day, -5, GETdate()), 108000, 20),
+(7, 7, dateADD(day, -6, GETdate()), 84000, 0),
+(8, 8, dateADD(day, -7, GETdate()), 36000, 10),
+(9, 9, dateADD(day, -8, GETdate()), 760000, 25),
+(10, 10, dateADD(day, -9, GETdate()), 31500, 0),
+(11, 11, dateADD(day, -10, GETdate()), 1500000, 10),
+(12, 12, dateADD(day, -11, GETdate()), 85000, 0),
+(13, 13, dateADD(day, -12, GETdate()), 320000, 15),
+(14, 14, dateADD(day, -13, GETdate()), 9500000, 30),
+(15, 15, dateADD(day, -14, GETdate()), 45000, 0),
+(16, 16, dateADD(day, -15, GETdate()), 180000, 5),
+(17, 17, dateADD(day, -16, GETdate()), 2500000, 20),
+(18, 18, dateADD(day, -17, GETdate()), 60000, 0),
+(19, 19, dateADD(day, -18, GETdate()), 120000, 10),
+(20, 20, dateADD(day, -19, GETdate()), 780000, 25),
+(21, 21, dateADD(day, -20, GETdate()), 35000, 0),
+(22, 22, dateADD(day, -21, GETdate()), 450000, 15),
+(23, 23, dateADD(day, -22, GETdate()), 2000000, 0),
+(24, 24, dateADD(day, -23, GETdate()), 95000, 5),
+(25, 25, dateADD(day, -24, GETdate()), 300000, 10),
+(26, 26, dateADD(day, -25, GETdate()), 15000000, 40),
+(27, 27, dateADD(day, -26, GETdate()), 65000, 0),
+(28, 28, dateADD(day, -27, GETdate()), 1800000, 20),
+(29, 29, dateADD(day, -28, GETdate()), 420000, 15),
+(30, 30, dateADD(day, -29, GETdate()), 75000, 0),
+(31, 31, dateADD(day, -30, GETdate()), 250000, 10),
+(32, 32, dateADD(day, -31, GETdate()), 3200000, 30),
+(33, 33, dateADD(day, -32, GETdate()), 85000, 0),
+(34, 34, dateADD(day, -33, GETdate()), 150000, 5),
+(35, 35, dateADD(day, -34, GETdate()), 600000, 15),
+(36, 36, dateADD(day, -35, GETdate()), 45000, 0),
+(37, 37, dateADD(day, -36, GETdate()), 900000, 25),
+(38, 38, dateADD(day, -37, GETdate()), 120000, 10),
+(39, 39, dateADD(day, -38, GETdate()), 3500000, 0),
+(40, 40, dateADD(day, -39, GETdate()), 65000, 5),
+(41, 41, dateADD(day, -40, GETdate()), 180000, 0),
+(42, 42, dateADD(day, -41, GETdate()), 2500000, 20),
+(43, 43, dateADD(day, -42, GETdate()), 95000, 10),
+(44, 44, dateADD(day, -43, GETdate()), 420000, 15),
+(45, 45, dateADD(day, -44, GETdate()), 75000, 0),
+(46, 46, dateADD(day, -45, GETdate()), 1500000, 30),
+(47, 47, dateADD(day, -46, GETdate()), 320000, 5),
+(48, 48, dateADD(day, -47, GETdate()), 85000, 0),
+(49, 49, dateADD(day, -48, GETdate()), 600000, 25),
+(50, 50, dateADD(day, -49, GETdate()), 120000, 10),
+(51, 51, dateADD(day, -50, GETdate()), 9500000, 40),
+(52, 52, dateADD(day, -51, GETdate()), 45000, 0),
+(53, 53, dateADD(day, -52, GETdate()), 180000, 5),
+(54, 54, dateADD(day, -53, GETdate()), 2500000, 20),
+(55, 55, dateADD(day, -54, GETdate()), 65000, 0),
+(56, 56, dateADD(day, -55, GETdate()), 420000, 15),
+(57, 57, dateADD(day, -56, GETdate()), 75000, 10),
+(58, 58, dateADD(day, -57, GETdate()), 150000, 0),
+(59, 59, dateADD(day, -58, GETdate()), 3200000, 30),
+(60, 60, dateADD(day, -59, GETdate()), 85000, 5),
+(61, 61, dateADD(day, -60, GETdate()), 600000, 0),
+(62, 62, dateADD(day, -61, GETdate()), 120000, 10),
+(63, 63, dateADD(day, -62, GETdate()), 1800000, 25),
+(64, 64, dateADD(day, -63, GETdate()), 45000, 0),
+(65, 65, dateADD(day, -64, GETdate()), 95000, 5),
+(66, 66, dateADD(day, -65, GETdate()), 250000, 15),
+(67, 67, dateADD(day, -66, GETdate()), 1500000, 20),
+(68, 68, dateADD(day, -67, GETdate()), 65000, 0),
+(69, 69, dateADD(day, -68, GETdate()), 420000, 10),
+(70, 70, dateADD(day, -69, GETdate()), 75000, 5),
+(71, 71, dateADD(day, -70, GETdate()), 3200000, 30),
+(72, 72, dateADD(day, -71, GETdate()), 85000, 0),
+(73, 73, dateADD(day, -72, GETdate()), 180000, 15),
+(74, 74, dateADD(day, -73, GETdate()), 600000, 10),
+(75, 75, dateADD(day, -74, GETdate()), 120000, 0),
+(76, 76, dateADD(day, -75, GETdate()), 9500000, 40),
+(77, 77, dateADD(day, -76, GETdate()), 45000, 5),
+(78, 78, dateADD(day, -77, GETdate()), 2500000, 20),
+(79, 79, dateADD(day, -78, GETdate()), 65000, 0),
+(80, 80, dateADD(day, -79, GETdate()), 420000, 15),
+(81, 81, dateADD(day, -80, GETdate()), 75000, 10),
+(82, 82, dateADD(day, -81, GETdate()), 150000, 0),
+(83, 83, dateADD(day, -82, GETdate()), 3200000, 30),
+(84, 84, dateADD(day, -83, GETdate()), 85000, 5),
+(85, 85, dateADD(day, -84, GETdate()), 180000, 0),
+(86, 86, dateADD(day, -85, GETdate()), 600000, 25),
+(87, 87, dateADD(day, -86, GETdate()), 120000, 10),
+(88, 88, dateADD(day, -87, GETdate()), 9500000, 40),
+(89, 89, dateADD(day, -88, GETdate()), 45000, 0),
+(90, 90, dateADD(day, -89, GETdate()), 2500000, 20),
+(91, 91, dateADD(day, -90, GETdate()), 65000, 5),
+(92, 92, dateADD(day, -91, GETdate()), 420000, 15),
+(93, 93, dateADD(day, -92, GETdate()), 75000, 0),
+(94, 94, dateADD(day, -93, GETdate()), 150000, 10),
+(95, 95, dateADD(day, -94, GETdate()), 3200000, 30),
+(96, 96, dateADD(day, -95, GETdate()), 85000, 0),
+(97, 97, dateADD(day, -96, GETdate()), 180000, 5),
+(98, 98, dateADD(day, -97, GETdate()), 600000, 25),
+(99, 99, dateADD(day, -98, GETdate()), 120000, 10),
+(100, 100, dateADD(day, -99, GETdate()), 9500000, 40);
 
 -- Bảng ChiTietHDBan
-INSERT INTO ChiTietHDBan (MaHDBan, MaSP, SoLuong, DonGia, ThanhTien) VALUES
+insert into ChiTietHDBan (MaHDBan, MasP, SoLuong, DonGia, ThanhTien) VALUES
 (1, 1, 1, 12000000, 12000000),
 (2, 2, 1, 500000, 500000),
 (3, 3, 1, 90000, 90000),
@@ -1149,20 +1149,111 @@ INSERT INTO ChiTietHDBan (MaHDBan, MaSP, SoLuong, DonGia, ThanhTien) VALUES
 
 
 -- Tiếp tục bảng HoaDonNhap
-INSERT INTO HoaDonNhap (MaNV, MaNCC, NgayNhap, TongTien) VALUES
-(2, 1, DATEADD(day, -10, GETDATE()), 7200000),
-(3, 2, DATEADD(day, -11, GETDATE()), 15000000),
-(4, 3, DATEADD(day, -12, GETDATE()), 540000),
-(5, 4, DATEADD(day, -13, GETDATE()), 1200000),
-(6, 5, DATEADD(day, -14, GETDATE()), 2100000),
-(7, 6, DATEADD(day, -15, GETDATE()), 4800000),
-(8, 7, DATEADD(day, -16, GETDATE()), 900000),
-(9, 8, DATEADD(day, -17, GETDATE()), 10500000),
-(10, 9, DATEADD(day, -18, GETDATE()), 3600000),
-(1, 10, DATEADD(day, -19, GETDATE()), 1800000);
+insert into HoaDonNhap (MaNV, MaNCC, NgayNhap, TongTien) VALUES
+(2, 1, dateADD(day, -10, GETdate()), 7200000),
+(3, 2, dateADD(day, -11, GETdate()), 15000000),
+(4, 3, dateADD(day, -12, GETdate()), 540000),
+(5, 4, dateADD(day, -13, GETdate()), 1200000),
+(6, 5, dateADD(day, -14, GETdate()), 2100000),
+(7, 6, dateADD(day, -15, GETdate()), 4800000),
+(8, 7, dateADD(day, -16, GETdate()), 900000),
+(9, 8, dateADD(day, -17, GETdate()), 10500000),
+(10, 9, dateADD(day, -18, GETdate()), 3600000),
+(1, 10, dateADD(day, -19, GETdate()), 1800000),
+(11, 11, dateADD(day, -20, GETdate()), 2700000),
+(12, 12, dateADD(day, -21, GETdate()), 6300000),
+(13, 13, dateADD(day, -22, GETdate()), 4200000),
+(14, 14, dateADD(day, -23, GETdate()), 8100000),
+(15, 15, dateADD(day, -24, GETdate()), 1500000),
+(16, 16, dateADD(day, -25, GETdate()), 9600000),
+(17, 17, dateADD(day, -26, GETdate()), 3300000),
+(18, 18, dateADD(day, -27, GETdate()), 5700000),
+(19, 19, dateADD(day, -28, GETdate()), 2400000),
+(20, 20, dateADD(day, -29, GETdate()), 6900000),
+(21, 21, dateADD(day, -30, GETdate()), 3900000),
+(22, 22, dateADD(day, -31, GETdate()), 8700000),
+(23, 23, dateADD(day, -32, GETdate()), 1800000),
+(24, 24, dateADD(day, -33, GETdate()), 5100000),
+(25, 25, dateADD(day, -34, GETdate()), 3000000),
+(26, 26, dateADD(day, -35, GETdate()), 7500000),
+(27, 27, dateADD(day, -36, GETdate()), 4500000),
+(28, 28, dateADD(day, -37, GETdate()), 9300000),
+(29, 29, dateADD(day, -38, GETdate()), 2100000),
+(30, 30, dateADD(day, -39, GETdate()), 6000000),
+(31, 31, dateADD(day, -40, GETdate()), 3600000),
+(32, 32, dateADD(day, -41, GETdate()), 7800000),
+(33, 33, dateADD(day, -42, GETdate()), 2700000),
+(34, 34, dateADD(day, -43, GETdate()), 6600000),
+(35, 35, dateADD(day, -44, GETdate()), 4200000),
+(36, 36, dateADD(day, -45, GETdate()), 8400000),
+(37, 37, dateADD(day, -46, GETdate()), 2400000),
+(38, 38, dateADD(day, -47, GETdate()), 6900000),
+(39, 39, dateADD(day, -48, GETdate()), 3900000),
+(40, 40, dateADD(day, -49, GETdate()), 9000000),
+(41, 41, dateADD(day, -50, GETdate()), 3000000),
+(42, 42, dateADD(day, -51, GETdate()), 7200000),
+(43, 43, dateADD(day, -52, GETdate()), 4500000),
+(44, 44, dateADD(day, -53, GETdate()), 8100000),
+(45, 45, dateADD(day, -54, GETdate()), 2700000),
+(46, 46, dateADD(day, -55, GETdate()), 6600000),
+(47, 47, dateADD(day, -56, GETdate()), 3600000),
+(48, 48, dateADD(day, -57, GETdate()), 7800000),
+(49, 49, dateADD(day, -58, GETdate()), 2400000),
+(50, 50, dateADD(day, -59, GETdate()), 6900000),
+(51, 51, dateADD(day, -60, GETdate()), 4200000),
+(52, 52, dateADD(day, -61, GETdate()), 8700000),
+(53, 53, dateADD(day, -62, GETdate()), 3000000),
+(54, 54, dateADD(day, -63, GETdate()), 7500000),
+(55, 55, dateADD(day, -64, GETdate()), 3900000),
+(56, 56, dateADD(day, -65, GETdate()), 9300000),
+(57, 57, dateADD(day, -66, GETdate()), 2700000),
+(58, 58, dateADD(day, -67, GETdate()), 6600000),
+(59, 59, dateADD(day, -68, GETdate()), 4500000),
+(60, 60, dateADD(day, -69, GETdate()), 8100000),
+(61, 61, dateADD(day, -70, GETdate()), 2400000),
+(62, 62, dateADD(day, -71, GETdate()), 7200000),
+(63, 63, dateADD(day, -72, GETdate()), 3600000),
+(64, 64, dateADD(day, -73, GETdate()), 7800000),
+(65, 65, dateADD(day, -74, GETdate()), 3000000),
+(66, 66, dateADD(day, -75, GETdate()), 6900000),
+(67, 67, dateADD(day, -76, GETdate()), 4200000),
+(68, 68, dateADD(day, -77, GETdate()), 8700000),
+(69, 69, dateADD(day, -78, GETdate()), 2700000),
+(70, 70, dateADD(day, -79, GETdate()), 6600000),
+(71, 71, dateADD(day, -80, GETdate()), 3900000),
+(72, 72, dateADD(day, -81, GETdate()), 9300000),
+(73, 73, dateADD(day, -82, GETdate()), 2400000),
+(74, 74, dateADD(day, -83, GETdate()), 7200000),
+(75, 75, dateADD(day, -84, GETdate()), 4500000),
+(76, 76, dateADD(day, -85, GETdate()), 8100000),
+(77, 77, dateADD(day, -86, GETdate()), 3000000),
+(78, 78, dateADD(day, -87, GETdate()), 6900000),
+(79, 79, dateADD(day, -88, GETdate()), 3600000),
+(80, 80, dateADD(day, -89, GETdate()), 7800000),
+(81, 81, dateADD(day, -90, GETdate()), 2700000),
+(82, 82, dateADD(day, -91, GETdate()), 6600000),
+(83, 83, dateADD(day, -92, GETdate()), 4200000),
+(84, 84, dateADD(day, -93, GETdate()), 8700000),
+(85, 85, dateADD(day, -94, GETdate()), 2400000),
+(86, 86, dateADD(day, -95, GETdate()), 7200000),
+(87, 87, dateADD(day, -96, GETdate()), 3900000),
+(88, 88, dateADD(day, -97, GETdate()), 9300000),
+(89, 89, dateADD(day, -98, GETdate()), 3000000),
+(90, 90, dateADD(day, -99, GETdate()), 6900000),
+(91, 91, dateADD(day, -100, GETdate()), 4500000),
+(92, 92, dateADD(day, -101, GETdate()), 8100000),
+(93, 93, dateADD(day, -102, GETdate()), 2700000),
+(94, 94, dateADD(day, -103, GETdate()), 6600000),
+(95, 95, dateADD(day, -104, GETdate()), 3600000),
+(96, 96, dateADD(day, -105, GETdate()), 7800000),
+(97, 97, dateADD(day, -106, GETdate()), 2400000),
+(98, 98, dateADD(day, -107, GETdate()), 7200000),
+(99, 99, dateADD(day, -108, GETdate()), 4200000),
+(100, 100, dateADD(day, -109, GETdate()), 8700000);
+
 
 -- Bảng ChiTietHDNhap
-INSERT INTO ChiTietHDNhap (MaHDNhap, MaSP, SoLuong, DonGia, ThanhTien) VALUES
+insert into ChiTietHDNhap (MaHDNhap, MasP, SoLuong, DonGia, ThanhTien) VALUES
 (1, 1, 10, 720000, 7200000),
 (2, 2, 30, 500000, 15000000),
 (3, 3, 60, 9000, 540000),
@@ -1172,23 +1263,205 @@ INSERT INTO ChiTietHDNhap (MaHDNhap, MaSP, SoLuong, DonGia, ThanhTien) VALUES
 (7, 7, 15, 60000, 900000),
 (8, 8, 50, 210000, 10500000),
 (9, 9, 8, 450000, 3600000),
-(10, 10, 90, 20000, 1800000);
+(10, 10, 90, 20000, 1800000),
+(11, 11, 20, 310000, 6200000),
+(12, 12, 30, 466667, 14000000),
+(13, 13, 80, 9500, 760000),
+(14, 14, 11, 100000, 1100000),
+(15, 15, 30, 90000, 2700000),
+(16, 16, 45, 100000, 4500000),
+(17, 17, 11, 90000, 990000),
+(18, 18, 48, 225000, 10800000),
+(19, 19, 74, 50000, 3700000),
+(20, 20, 95, 20000, 1900000),
+(21, 1, 41, 200000, 8200000),
+(22, 2, 50, 250000, 12500000),
+(23, 3, 80, 8000, 640000),
+(24, 4, 10, 100000, 1000000),
+(25, 5, 57, 43860, 2500000),
+(26, 6, 47, 100000, 4700000),
+(27, 7, 29, 30000, 870000),
+(28, 8, 38, 250000, 9500000),
+(29, 9, 62, 50000, 3100000),
+(30, 10, 70, 25000, 1750000),
+(31, 11, 65, 110000, 7150000),
+(32, 12, 58, 250000, 14500000),
+(33, 13, 57, 10000, 570000),
+(34, 14, 9, 150000, 1350000),
+(35, 15, 59, 50000, 2950000),
+(36, 16, 41, 100000, 4100000),
+(37, 17, 19, 50000, 950000),
+(38, 18, 56, 200000, 11200000),
+(39, 19, 68, 50000, 3400000),
+(40, 20, 84, 25000, 2100000),
+(41, 1, 82, 95000, 7800000),
+(42, 2, 52, 250000, 13000000),
+(43, 3, 59, 10000, 590000),
+(44, 4, 25, 50000, 1250000),
+(45, 5, 57, 50000, 2850000),
+(46, 6, 44, 100000, 4400000),
+(47, 7, 49, 20000, 980000),
+(48, 8, 51, 200000, 10200000),
+(49, 9, 66, 50000, 3300000),
+(50, 10, 80, 20000, 1600000),
+(51, 11, 85, 100000, 8500000),
+(52, 12, 55, 250000, 13750000),
+(53, 13, 53, 10000, 530000),
+(54, 14, 10, 145000, 1450000),
+(55, 15, 44, 50000, 2200000),
+(56, 16, 46, 100000, 4600000),
+(57, 17, 19, 50000, 950000),
+(58, 18, 56, 205000, 11500000),
+(59, 19, 71, 50000, 3550000),
+(60, 20, 84, 25000, 2100000),
+(61, 1, 85, 90000, 7650000),
+(62, 2, 61, 200000, 12200000),
+(63, 3, 79, 9000, 710000),
+(64, 4, 10, 95000, 950000),
+(65, 5, 61, 50000, 3050000),
+(66, 6, 49, 100000, 4900000),
+(67, 7, 51, 20000, 1020000),
+(68, 8, 52, 210000, 10920000),
+(69, 9, 74, 50000, 3700000),
+(70, 10, 74, 25000, 1850000),
+(71, 11, 53, 150000, 7950000),
+(72, 12, 57, 250000, 14250000),
+(73, 13, 65, 10000, 650000),
+(74, 14, 12, 115000, 1380000),
+(75, 15, 46, 50000, 2300000),
+(76, 16, 43, 100000, 4300000),
+(77, 17, 19, 50000, 970000),
+(78, 18, 58, 200000, 11600000),
+(79, 19, 65, 50000, 3250000),
+(80, 20, 68, 25000, 1700000),
+(81, 1, 83, 100000, 8300000),
+(82, 2, 63, 200000, 12600000),
+(83, 3, 67, 10000, 670000),
+(84, 4, 10, 112000, 1120000),
+(85, 5, 51, 50000, 2550000),
+(86, 6, 48, 100000, 4800000),
+(87, 7, 33, 30000, 990000),
+(88, 8, 53, 200000, 10600000),
+(89, 9, 69, 50000, 3450000),
+(90, 10, 78, 25000, 1950000),
+(91, 11, 47, 150000, 7050000),
+(92, 12, 59, 250000, 14750000),
+(93, 13, 58, 10000, 580000),
+(94, 14, 13, 125000, 1625000),
+(95, 15, 43, 50000, 2150000),
+(96, 16, 42, 100000, 4200000),
+(97, 17, 18, 50000, 900000),
+(98, 18, 59, 200000, 11800000),
+(99, 19, 65, 50000, 3250000),
+(100, 20, 68, 25000, 1700000);
+
 
 -- Bảng PhieuKiemKho
-INSERT INTO PhieuKiemKho (MaNV, NgayKiemKho, MoTa) VALUES
-(1, GETDATE(), N'Kiểm kê hàng hóa định kỳ'),
-(2, DATEADD(day, -5, GETDATE()), N'Kiểm tra số lượng hàng hóa sau nhập kho'),
-(3, DATEADD(day, -10, GETDATE()), N'Kiểm kê đột xuất'),
-(4, DATEADD(day, -15, GETDATE()), N'Kiểm tra hàng hóa sắp hết hạn'),
-(5, DATEADD(day, -20, GETDATE()), N'Kiểm kê hàng hóa cuối tháng'),
-(6, DATEADD(day, -25, GETDATE()), N'Kiểm tra hàng hóa bị lỗi'),
-(7, DATEADD(day, -30, GETDATE()), N'Kiểm kê hàng hóa theo yêu cầu'),
-(8, DATEADD(day, -35, GETDATE()), N'Kiểm tra số lượng hàng hóa sau bán'),
-(9, DATEADD(day, -40, GETDATE()), N'Kiểm kê hàng hóa đặc biệt'),
-(10, DATEADD(day, -45, GETDATE()), N'Kiểm tra hàng hóa tồn kho');
+insert into PhieuKiemKho (MaNV, NgayKiemKho, MoTa) VALUES
+(1, GETdate(), N'Kiểm kê hàng hóa định kỳ'),
+(2, dateADD(day, -5, GETdate()), N'Kiểm tra số lượng hàng hóa sau nhập kho'),
+(3, dateADD(day, -10, GETdate()), N'Kiểm kê đột xuất'),
+(4, dateADD(day, -15, GETdate()), N'Kiểm tra hàng hóa sắp hết hạn'),
+(5, dateADD(day, -20, GETdate()), N'Kiểm kê hàng hóa cuối tháng'),
+(6, dateADD(day, -25, GETdate()), N'Kiểm tra hàng hóa bị lỗi'),
+(7, dateADD(day, -30, GETdate()), N'Kiểm kê hàng hóa theo yêu cầu'),
+(8, dateADD(day, -35, GETdate()), N'Kiểm tra số lượng hàng hóa sau bán'),
+(9, dateADD(day, -40, GETdate()), N'Kiểm kê hàng hóa đặc biệt'),
+(10, dateADD(day, -45, GETdate()), N'Kiểm tra hàng hóa tồn kho'),
+(11, dateADD(day, -50, GETdate()), N'Kiểm kê hàng thực phẩm tươi'),
+(12, dateADD(day, -55, GETdate()), N'Kiểm tra hàng hóa đông lạnh'),
+(13, dateADD(day, -60, GETdate()), N'Kiểm kê hàng gia dụng'),
+(14, dateADD(day, -65, GETdate()), N'Kiểm tra hàng hóa đồ uống'),
+(15, dateADD(day, -70, GETdate()), N'Kiểm kê hàng hóa văn phòng phẩm'),
+(16, dateADD(day, -75, GETdate()), N'Kiểm tra hàng hóa mỹ phẩm'),
+(17, dateADD(day, -80, GETdate()), N'Kiểm kê hàng thời trang'),
+(18, dateADD(day, -85, GETdate()), N'Kiểm tra hàng hóa điện tử'),
+(19, dateADD(day, -90, GETdate()), N'Kiểm kê hàng thực phẩm đóng hộp'),
+(20, dateADD(day, -95, GETdate()), N'Kiểm tra hàng hóa đồ chơi'),
+(21, dateADD(day, -100, GETdate()), N'Kiểm kê hàng hóa chăm sóc cá nhân'),
+(22, dateADD(day, -105, GETdate()), N'Kiểm tra hàng hóa đồ dùng bếp'),
+(23, dateADD(day, -110, GETdate()), N'Kiểm kê hàng hóa tẩy rửa'),
+(24, dateADD(day, -115, GETdate()), N'Kiểm tra hàng hóa thực phẩm chay'),
+(25, dateADD(day, -120, GETdate()), N'Kiểm kê hàng hóa nhập khẩu'),
+(26, dateADD(day, -125, GETdate()), N'Kiểm tra hàng hóa đồ uống có cồn'),
+(27, dateADD(day, -130, GETdate()), N'Kiểm kê hàng hóa đồ dùng trẻ em'),
+(28, dateADD(day, -135, GETdate()), N'Kiểm tra hàng hóa đồ dùng thú cưng'),
+(29, dateADD(day, -140, GETdate()), N'Kiểm kê hàng hóa trang trí'),
+(30, dateADD(day, -145, GETdate()), N'Kiểm tra hàng hóa thể thao'),
+(31, dateADD(day, -150, GETdate()), N'Kiểm kê hàng hóa sức khỏe'),
+(32, dateADD(day, -155, GETdate()), N'Kiểm tra hàng hóa thực phẩm hữu cơ'),
+(33, dateADD(day, -160, GETdate()), N'Kiểm kê hàng hóa rau sạch'),
+(34, dateADD(day, -165, GETdate()), N'Kiểm tra hàng hóa nước suối'),
+(35, dateADD(day, -170, GETdate()), N'Kiểm kê hàng hóa bánh kẹo'),
+(36, dateADD(day, -175, GETdate()), N'Kiểm tra hàng hóa sữa'),
+(37, dateADD(day, -180, GETdate()), N'Kiểm kê hàng hóa mì gói'),
+(38, dateADD(day, -185, GETdate()), N'Kiểm tra hàng hóa snack'),
+(39, dateADD(day, -190, GETdate()), N'Kiểm kê hàng hóa dầu ăn'),
+(40, dateADD(day, -195, GETdate()), N'Kiểm tra hàng hóa nước chấm'),
+(41, dateADD(day, -200, GETdate()), N'Kiểm kê hàng hóa trà cà phê'),
+(42, dateADD(day, -205, GETdate()), N'Kiểm tra hàng hóa bia rượu'),
+(43, dateADD(day, -210, GETdate()), N'Kiểm kê hàng hóa khăn giấy'),
+(44, dateADD(day, -215, GETdate()), N'Kiểm tra hàng hóa gạo'),
+(45, dateADD(day, -220, GETdate()), N'Kiểm kê hàng hóa nước ép'),
+(46, dateADD(day, -225, GETdate()), N'Kiểm tra hàng hóa đặc sản'),
+(47, dateADD(day, -230, GETdate()), N'Kiểm kê hàng hóa sữa chua'),
+(48, dateADD(day, -235, GETdate()), N'Kiểm tra hàng hóa thực phẩm nhanh'),
+(49, dateADD(day, -240, GETdate()), N'Kiểm kê hàng hóa gia vị'),
+(50, dateADD(day, -245, GETdate()), N'Kiểm tra hàng hóa nước tăng lực'),
+(51, dateADD(day, -250, GETdate()), N'Kiểm kê hàng hóa vitamin'),
+(52, dateADD(day, -255, GETdate()), N'Kiểm tra hàng hóa đồ nhựa'),
+(53, dateADD(day, -260, GETdate()), N'Kiểm kê hàng hóa mứt Tết'),
+(54, dateADD(day, -265, GETdate()), N'Kiểm tra hàng hóa bánh chưng'),
+(55, dateADD(day, -270, GETdate()), N'Kiểm kê hàng hóa tương cà'),
+(56, dateADD(day, -275, GETdate()), N'Kiểm tra hàng hóa rượu vang'),
+(57, dateADD(day, -280, GETdate()), N'Kiểm kê hàng hóa bình sữa'),
+(58, dateADD(day, -285, GETdate()), N'Kiểm tra hàng hóa nước mắm'),
+(59, dateADD(day, -290, GETdate()), N'Kiểm kê hàng hóa hạt dưa'),
+(60, dateADD(day, -295, GETdate()), N'Kiểm tra hàng hóa sữa chua uống'),
+(61, dateADD(day, -300, GETdate()), N'Kiểm kê hàng hóa nồi áp suất'),
+(62, dateADD(day, -305, GETdate()), N'Kiểm tra hàng hóa cải xanh'),
+(63, dateADD(day, -310, GETdate()), N'Kiểm kê hàng hóa nước ép dứa'),
+(64, dateADD(day, -315, GETdate()), N'Kiểm tra hàng hóa cà phê'),
+(65, dateADD(day, -320, GETdate()), N'Kiểm kê hàng hóa dầu gội'),
+(66, dateADD(day, -325, GETdate()), N'Kiểm tra hàng hóa kem đánh răng'),
+(67, dateADD(day, -330, GETdate()), N'Kiểm kê hàng hóa đồ chơi trẻ em'),
+(68, dateADD(day, -335, GETdate()), N'Kiểm tra hàng hóa đồ gia dụng'),
+(69, dateADD(day, -340, GETdate()), N'Kiểm kê hàng hóa đồ điện'),
+(70, dateADD(day, -345, GETdate()), N'Kiểm tra hàng hóa đồ đông lạnh'),
+(71, dateADD(day, -350, GETdate()), N'Kiểm kê hàng hóa thực phẩm tươi'),
+(72, dateADD(day, -355, GETdate()), N'Kiểm tra hàng hóa đồ uống có cồn'),
+(73, dateADD(day, -360, GETdate()), N'Kiểm kê hàng hóa đồ dùng học tập'),
+(74, dateADD(day, -365, GETdate()), N'Kiểm tra hàng hóa mỹ phẩm nam'),
+(75, dateADD(day, -370, GETdate()), N'Kiểm kê hàng hóa thực phẩm chay'),
+(76, dateADD(day, -375, GETdate()), N'Kiểm tra hàng hóa đồ dùng bếp'),
+(77, dateADD(day, -380, GETdate()), N'Kiểm kê hàng hóa đồ vệ sinh'),
+(78, dateADD(day, -385, GETdate()), N'Kiểm tra hàng hóa đồ chăm sóc trẻ'),
+(79, dateADD(day, -390, GETdate()), N'Kiểm kê hàng hóa đồ dùng thú cưng'),
+(80, dateADD(day, -395, GETdate()), N'Kiểm tra hàng hóa đồ trang trí'),
+(81, dateADD(day, -400, GETdate()), N'Kiểm kê hàng hóa đồ thể thao'),
+(82, dateADD(day, -405, GETdate()), N'Kiểm tra hàng hóa đồ điện tử nhỏ'),
+(83, dateADD(day, -410, GETdate()), N'Kiểm kê hàng hóa đồ dùng văn phòng'),
+(84, dateADD(day, -415, GETdate()), N'Kiểm tra hàng hóa đồ ăn vặt'),
+(85, dateADD(day, -420, GETdate()), N'Kiểm kê hàng hóa đồ uống không cồn'),
+(86, dateADD(day, -425, GETdate()), N'Kiểm tra hàng hóa đồ chăm sóc tóc'),
+(87, dateADD(day, -430, GETdate()), N'Kiểm kê hàng hóa đồ dùng cá nhân'),
+(88, dateADD(day, -435, GETdate()), N'Kiểm tra hàng hóa thực phẩm nhập khẩu'),
+(89, dateADD(day, -440, GETdate()), N'Kiểm kê hàng hóa đồ dùng y tế'),
+(90, dateADD(day, -445, GETdate()), N'Kiểm tra hàng hóa đồ chăm sóc da'),
+(91, dateADD(day, -450, GETdate()), N'Kiểm kê hàng hóa đồ dùng nấu ăn'),
+(92, dateADD(day, -455, GETdate()), N'Kiểm tra hàng hóa đồ dùng dã ngoại'),
+(93, dateADD(day, -460, GETdate()), N'Kiểm kê hàng hóa đồ dùng ngủ'),
+(94, dateADD(day, -465, GETdate()), N'Kiểm tra hàng hóa đồ dùng tắm'),
+(95, dateADD(day, -470, GETdate()), N'Kiểm kê hàng hóa đồ dùng làm đẹp'),
+(96, dateADD(day, -475, GETdate()), N'Kiểm tra hàng hóa đồ dùng gia đình'),
+(97, dateADD(day, -480, GETdate()), N'Kiểm kê hàng hóa đồ dùng thời trang'),
+(98, dateADD(day, -485, GETdate()), N'Kiểm tra hàng hóa đồ dùng công nghệ'),
+(99, dateADD(day, -490, GETdate()), N'Kiểm kê hàng hóa đồ dùng giải trí'),
+(100, dateADD(day, -495, GETdate()), N'Kiểm tra hàng hóa đồ dùng sức khỏe');
+
 
 -- Bảng ChiTietPhieuKiemKho
-INSERT INTO ChiTietPhieuKiemKho (MaPhieuKK, MaSP, SoLuongThucTe, SoLuongHeThong, ChenhLech) VALUES
+insert into ChiTietPhieuKiemKho (MaPhieuKK, MasP, SoLuongThucTe, SoLuongHeThong, ChenhLech) VALUES
 (1, 1, 50, 50, 0),
 (1, 2, 102, 100, 2),
 (2, 3, 200, 200, 0),
@@ -1198,388 +1471,476 @@ INSERT INTO ChiTietPhieuKiemKho (MaPhieuKK, MaSP, SoLuongThucTe, SoLuongHeThong,
 (4, 7, 118, 120, -2),
 (4, 8, 300, 300, 0),
 (5, 9, 60, 60, 0),
-(5, 10, 248, 250, -2);
- 
+(5, 10, 248, 250, -2),
+(6, 1, 100, 100, 0),
+(6, 2, 95, 100, -5),
+(7, 3, 110, 108, 2),
+(7, 4, 90, 90, 0),
+(8, 5, 130, 135, -5),
+(8, 6, 80, 80, 0),
+(9, 7, 120, 119, 1),
+(9, 8, 145, 150, -5),
+(10, 9, 60, 58, 2),
+(10, 10, 200, 200, 0),
+(11, 1, 101, 100, 1),
+(11, 2, 102, 100, 2),
+(12, 3, 199, 200, -1),
+(12, 4, 85, 85, 0),
+(13, 5, 140, 140, 0),
+(13, 6, 68, 70, -2),
+(14, 7, 117, 120, -3),
+(14, 8, 310, 310, 0),
+(15, 9, 63, 60, 3),
+(15, 10, 245, 250, -5),
+(16, 1, 48, 50, -2),
+(16, 2, 103, 100, 3),
+(17, 3, 205, 200, 5),
+(17, 4, 82, 80, 2),
+(18, 5, 149, 150, -1),
+(18, 6, 75, 75, 0),
+(19, 7, 122, 120, 2),
+(19, 8, 298, 300, -2),
+(20, 9, 59, 60, -1),
+(20, 10, 260, 250, 10),
+(21, 1, 50, 50, 0),
+(21, 2, 98, 100, -2),
+(22, 3, 198, 200, -2),
+(22, 4, 81, 80, 1),
+(23, 5, 155, 150, 5),
+(23, 6, 74, 70, 4),
+(24, 7, 121, 120, 1),
+(24, 8, 302, 300, 2),
+(25, 9, 62, 60, 2),
+(25, 10, 240, 250, -10),
+(26, 1, 49, 50, -1),
+(26, 2, 105, 100, 5),
+(27, 3, 201, 200, 1),
+(27, 4, 77, 80, -3),
+(28, 5, 145, 150, -5),
+(28, 6, 73, 75, -2),
+(29, 7, 119, 120, -1),
+(29, 8, 295, 300, -5),
+(30, 9, 61, 60, 1),
+(30, 10, 255, 250, 5),
+(31, 1, 52, 50, 2),
+(31, 2, 97, 100, -3),
+(32, 3, 203, 200, 3),
+(32, 4, 83, 80, 3),
+(33, 5, 151, 150, 1),
+(33, 6, 70, 70, 0),
+(34, 7, 115, 120, -5),
+(34, 8, 299, 300, -1),
+(35, 9, 65, 60, 5),
+(35, 10, 245, 250, -5),
+(36, 1, 50, 50, 0),
+(36, 2, 100, 100, 0),
+(37, 3, 200, 200, 0),
+(37, 4, 80, 80, 0),
+(38, 5, 150, 150, 0),
+(38, 6, 70, 70, 0),
+(39, 7, 120, 120, 0),
+(39, 8, 300, 300, 0),
+(40, 9, 60, 60, 0),
+(40, 10, 250, 250, 0),
+(41, 1, 55, 50, 5),
+(41, 2, 110, 100, 10),
+(42, 3, 190, 200, -10),
+(42, 4, 85, 80, 5),
+(43, 5, 160, 150, 10),
+(43, 6, 65, 70, -5),
+(44, 7, 130, 120, 10),
+(44, 8, 280, 300, -20),
+(45, 9, 58, 60, -2),
+(45, 10, 240, 250, -10),
+(46, 1, 51, 50, 1),
+(46, 2, 99, 100, -1),
+(47, 3, 202, 200, 2),
+(47, 4, 82, 80, 2),
+(48, 5, 148, 150, -2),
+(48, 6, 78, 75, 3),
+(49, 7, 124, 120, 4),
+(49, 8, 310, 300, 10),
+(50, 9, 66, 60, 6),
+(50, 10, 265, 250, 15);
  go
 -----------------------------------------------------query truy vấn các thành phần trong bảng -------------------------------------
-/*
+
 ----- tạo bảng view
 
 ---danh sach nhan vien
-CREATE VIEW vw_DanhSachNhanVien AS
-SELECT MaNV, HoTen, NgaySinh, GioiTinh, ChucVu
-FROM NhanVien;
+create view vw_DanhSachNhanVien as
+select MaNV, HoTen, NgaySinh, GioiTinh, ChucVu
+from NhanVien;
 go 
 --- danh sach san pham
-CREATE VIEW vw_DanhSachSanPham AS
-SELECT sp.MaSP, sp.TenSP, lsp.TenLoaiSP, sp.GiaBan, sp.SoLuongTonKho
-FROM SanPham sp
-JOIN LoaiSanPham lsp ON sp.MaLoaiSP = lsp.MaLoaiSP;
+create view vw_DanhSachSanPham as
+select sp.MasP, sp.TenSP, lsp.TenLoaiSP, sp.GiaBan, sp.SoLuongTonKho
+from SanPham sp
+JOIN LoaiSanPham lsp on sp.MaLoaiSP = lsp.MaLoaiSP;
 
 go 
 ---nhan vien ban duoc nhieu nhat
-CREATE VIEW v_NhanVienBanDuocNhieuNhat AS
-SELECT TOP 1 nv.MaNV, nv.HoTen, SUM(hdb.TongTien) AS TongTienBan
-FROM HoaDonBan hdb
-JOIN NhanVien nv ON hdb.MaNV = nv.MaNV
+create view v_NhanVienBanDuocNhieuNhat as
+select TOP 1 nv.MaNV, nv.HoTen, SUM(hdb.TongTien) as TongTienBan
+from HoaDonBan hdb
+JOIN NhanVien nv on hdb.MaNV = nv.MaNV
 GROUP BY nv.MaNV, nv.HoTen
 ORDER BY TongTienBan DESC;
 
 go 
 --- sản phẩm sap hêt hạn
-CREATE VIEW v_SanPhamSapHetHan AS
-SELECT MaSP, TenSP, HanSuDung
-FROM SanPham
-WHERE HanSuDung IS NOT NULL AND HanSuDung <= DATEADD(day, 30, GETDATE()) AND HanSuDung >= GETDATE();
+create view v_SanPhamSapHetHan as
+select MasP, TenSP, HanSuDung
+from SanPham
+where HanSuDung IS NOT NULL AND HanSuDung <= dateADD(day, 30, GETdate()) AND HanSuDung >= GETdate();
 
 go
 ---Doanh thu thoe loai san pham
-CREATE VIEW v_DoanhThuTheoLoaiSanPhamThang AS
-SELECT lsp.TenLoaiSP, SUM(cthdb.ThanhTien) AS DoanhThu
-FROM ChiTietHDBan cthdb
-JOIN SanPham sp ON cthdb.MaSP = sp.MaSP
-JOIN LoaiSanPham lsp ON sp.MaLoaiSP = lsp.MaLoaiSP
-JOIN HoaDonBan hdb ON cthdb.MaHDBan = hdb.MaHDBan
-WHERE YEAR(hdb.NgayBan) = YEAR(GETDATE()) AND MONTH(hdb.NgayBan) = MONTH(GETDATE())
+create view v_DoanhThuTheoLoaiSanPhamThang as
+select lsp.TenLoaiSP, SUM(cthdb.ThanhTien) as DoanhThu
+from ChiTietHDBan cthdb
+JOIN SanPham sp on cthdb.MasP = sp.MasP
+JOIN LoaiSanPham lsp on sp.MaLoaiSP = lsp.MaLoaiSP
+JOIN HoaDonBan hdb on cthdb.MaHDBan = hdb.MaHDBan
+where YEAR(hdb.NgayBan) = YEAR(GETdate()) AND MonTH(hdb.NgayBan) = MonTH(GETdate())
 GROUP BY lsp.TenLoaiSP;
 
 go
 ---tong so luong nhaop theo nha cung cap
-CREATE VIEW v_TongSoLuongNhapTheoNCCThang AS
-SELECT ncc.TenNCC, SUM(cthdn.SoLuong) AS TongSoLuongNhap
-FROM ChiTietHDNhap cthdn
-JOIN HoaDonNhap hdn ON cthdn.MaHDNhap = hdn.MaHDNhap
-JOIN NhaCungCap ncc ON hdn.MaNCC = ncc.MaNCC
-WHERE YEAR(hdn.NgayNhap) = YEAR(GETDATE()) AND MONTH(hdn.NgayNhap) = MONTH(GETDATE())
+create view v_TongSoLuongNhapTheonCCThang as
+select ncc.TenNCC, SUM(cthdn.SoLuong) as TongSoLuongNhap
+from ChiTietHDNhap cthdn
+JOIN HoaDonNhap hdn on cthdn.MaHDNhap = hdn.MaHDNhap
+JOIN NhaCungCap ncc on hdn.MaNCC = ncc.MaNCC
+where YEAR(hdn.NgayNhap) = YEAR(GETdate()) AND MonTH(hdn.NgayNhap) = MonTH(GETdate())
 GROUP BY ncc.TenNCC;
 
 go
 ---bang view top 5 sang pham ban chay nhat thanh
 
-CREATE VIEW v_Top5SanPhamBanChayNhatThang AS
-SELECT TOP 5 sp.MaSP, sp.TenSP, SUM(cthdb.SoLuong) AS TongSoLuongBan
-FROM ChiTietHDBan cthdb
-JOIN SanPham sp ON cthdb.MaSP = sp.MaSP
-JOIN HoaDonBan hdb ON cthdb.MaHDBan = hdb.MaHDBan
-WHERE YEAR(hdb.NgayBan) = YEAR(GETDATE()) AND MONTH(hdb.NgayBan) = MONTH(GETDATE())
-GROUP BY sp.MaSP, sp.TenSP
+create view v_Top5SanPhamBanChayNhatThang as
+select TOP 5 sp.MasP, sp.TenSP, SUM(cthdb.SoLuong) as TongSoLuongBan
+from ChiTietHDBan cthdb
+JOIN SanPham sp on cthdb.MasP = sp.MasP
+JOIN HoaDonBan hdb on cthdb.MaHDBan = hdb.MaHDBan
+where YEAR(hdb.NgayBan) = YEAR(GETdate()) AND MonTH(hdb.NgayBan) = MonTH(GETdate())
+GROUP BY sp.MasP, sp.TenSP
 ORDER BY TongSoLuongBan DESC;
 go
 -- khach hang tiem nang
-CREATE VIEW v_KhachHangTiemNang AS
-SELECT kh.MaKH, kh.HoTen, kh.DiemTichLuy
-FROM KhachHang kh
-WHERE kh.MaKH NOT IN (
-    SELECT DISTINCT MaKH
-    FROM HoaDonBan
-    WHERE NgayBan >= DATEADD(month, -3, GETDATE())
+create view v_KhachHangTiemNang as
+select kh.MaKH, kh.HoTen, kh.DiemTichLuy
+from KhachHang kh
+where kh.MaKH NOT IN (
+    select DISTINCT MaKH
+    from HoaDonBan
+    where NgayBan >= dateADD(month, -3, GETdate())
 )
 ORDER BY kh.DiemTichLuy DESC;
 
 go
 ---- bang biew so luong chenh lech kiem kho
-CREATE VIEW v_SoLuongChenhLechKiemKho AS
-SELECT
+create view v_SoLuongChenhLechKiemKho as
+select
     pkk.MaPhieuKK,
     pkk.NgayKiemKho,
-    nv.HoTen AS NguoiKiemKho,
+    nv.HoTen as NguoiKiemKho,
     sp.TenSP,
     ctpkk.SoLuongThucTe,
     ctpkk.SoLuongHeThong,
     ctpkk.ChenhLech
-FROM PhieuKiemKho pkk
-JOIN ChiTietPhieuKiemKho ctpkk ON pkk.MaPhieuKK = ctpkk.MaPhieuKK
-JOIN SanPham sp ON ctpkk.MaSP = sp.MaSP
-JOIN NhanVien nv ON pkk.MaNV = nv.MaNV;
+from PhieuKiemKho pkk
+JOIN ChiTietPhieuKiemKho ctpkk on pkk.MaPhieuKK = ctpkk.MaPhieuKK
+JOIN SanPham sp on ctpkk.MasP = sp.MasP
+JOIN NhanVien nv on pkk.MaNV = nv.MaNV;
 
 go
 ----- bang view  san pham cap nhat them
-CREATE VIEW v_SanPhamCanNhapThem AS
-SELECT sp.MaSP, sp.TenSP, sp.SoLuongTonKho, SUM(cthdb.SoLuong) AS SoLuongBanTrongThang
-FROM SanPham sp
-JOIN ChiTietHDBan cthdb ON sp.MaSP = cthdb.MaSP
-JOIN HoaDonBan hdb ON cthdb.MaHDBan = hdb.MaHDBan
-WHERE sp.SoLuongTonKho < 20
-  AND YEAR(hdb.NgayBan) = YEAR(GETDATE()) AND MONTH(hdb.NgayBan) = MONTH(GETDATE())
-GROUP BY sp.MaSP, sp.TenSP, sp.SoLuongTonKho
+create view v_SanPhamCanNhapThem as
+select sp.MasP, sp.TenSP, sp.SoLuongTonKho, SUM(cthdb.SoLuong) as SoLuongBanTrongThang
+from SanPham sp
+JOIN ChiTietHDBan cthdb on sp.MasP = cthdb.MasP
+JOIN HoaDonBan hdb on cthdb.MaHDBan = hdb.MaHDBan
+where sp.SoLuongTonKho < 20
+  AND YEAR(hdb.NgayBan) = YEAR(GETdate()) AND MonTH(hdb.NgayBan) = MonTH(GETdate())
+GROUP BY sp.MasP, sp.TenSP, sp.SoLuongTonKho
 HAVING SUM(cthdb.SoLuong) > 50;
 
 go
 --- bang view chi tiet khuyen mai ten san pham va ten khuuyen mai
-CREATE VIEW v_ChiTietKhuyenMaiVoiTenSPVaTenKM AS
-SELECT km.TenKM, sp.TenSP
-FROM ChiTietKhuyenMai ctkm
-JOIN KhuyenMai km ON ctkm.MaKM = km.MaKM
-JOIN SanPham sp ON ctkm.MaSP = sp.MaSP;
+create view v_ChiTietKhuyenMaiVoiTenSPVaTenKM as
+select km.TenKM, sp.TenSP
+from ChiTietKhuyenMai ctkm
+JOIN KhuyenMai km on ctkm.MaKM = km.MaKM
+JOIN SanPham sp on ctkm.MasP = sp.MasP;
 
 go
 --bang vew có thong ke nhap xuat hang thang
-CREATE VIEW v_ThongKeNhapXuatTonThang AS
-SELECT
-    sp.MaSP,
+create view v_ThongKeNhapXuatTonThang as
+select
+    sp.MasP,
     sp.TenSP,
-    SUM(CASE WHEN YEAR(hdn.NgayNhap) = YEAR(GETDATE()) AND MONTH(hdn.NgayNhap) = MONTH(GETDATE()) THEN cthdn.SoLuong ELSE 0 END) AS TongSoLuongNhapThang,
-    SUM(CASE WHEN YEAR(hdb.NgayBan) = YEAR(GETDATE()) AND MONTH(hdb.NgayBan) = MONTH(GETDATE()) THEN cthdb.SoLuong ELSE 0 END) AS TongSoLuongXuatThang,
-    sp.SoLuongTonKho AS TonHienTai
-FROM SanPham sp
-LEFT JOIN ChiTietHDNhap cthdn ON sp.MaSP = cthdn.MaSP
-LEFT JOIN HoaDonNhap hdn ON cthdn.MaHDNhap = hdn.MaHDNhap
-LEFT JOIN ChiTietHDBan cthdb ON sp.MaSP = cthdb.MaSP
-LEFT JOIN HoaDonBan hdb ON cthdb.MaHDBan = hdb.MaHDBan
-GROUP BY sp.MaSP, sp.TenSP, sp.SoLuongTonKho;
+    SUM(CasE WHEN YEAR(hdn.NgayNhap) = YEAR(GETdate()) AND MonTH(hdn.NgayNhap) = MonTH(GETdate()) THEN cthdn.SoLuong ELSE 0 end) as TongSoLuongNhapThang,
+    SUM(CasE WHEN YEAR(hdb.NgayBan) = YEAR(GETdate()) AND MonTH(hdb.NgayBan) = MonTH(GETdate()) THEN cthdb.SoLuong ELSE 0 end) as TongSoLuongXuatThang,
+    sp.SoLuongTonKho as TonHienTai
+from SanPham sp
+LEFT JOIN ChiTietHDNhap cthdn on sp.MasP = cthdn.MasP
+LEFT JOIN HoaDonNhap hdn on cthdn.MaHDNhap = hdn.MaHDNhap
+LEFT JOIN ChiTietHDBan cthdb on sp.MasP = cthdb.MasP
+LEFT JOIN HoaDonBan hdb on cthdb.MaHDBan = hdb.MaHDBan
+GROUP BY sp.MasP, sp.TenSP, sp.SoLuongTonKho;
 
 go
 
 ---bảng view nhan vien co hoa don cao nhat
-CREATE VIEW v_NhanVienCoHoaDonBanCaoNhat AS
-SELECT TOP 1 nv.MaNV, nv.HoTen, SUM(hdb.TongTien) AS TongGiaTriBan
-FROM NhanVien nv
-JOIN HoaDonBan hdb ON nv.MaNV = hdb.MaNV
-WHERE YEAR(hdb.NgayBan) = YEAR(GETDATE())
+create view v_NhanVienCoHoaDonBanCaonhat as
+select TOP 1 nv.MaNV, nv.HoTen, SUM(hdb.TongTien) as TongGiaTriBan
+from NhanVien nv
+JOIN HoaDonBan hdb on nv.MaNV = hdb.MaNV
+where YEAR(hdb.NgayBan) = YEAR(GETdate())
 GROUP BY nv.MaNV, nv.HoTen
 ORDER BY TongGiaTriBan DESC;
 
 go
---bảng view SanPhamLoiNhuanCaoNhatThang
-CREATE VIEW v_SanPhamLoiNhuanCaoNhatThang AS
-SELECT TOP 1
-    sp.MaSP,
+--bảng view SanPhamLoiNhuanCaonhatThang
+create view v_SanPhamLoiNhuanCaonhatThang as
+select TOP 1
+    sp.MasP,
     sp.TenSP,
-    SUM(cthdb.SoLuong * (sp.GiaBan - sp.GiaNhap)) AS TongLoiNhuan
-FROM ChiTietHDBan cthdb
-JOIN SanPham sp ON cthdb.MaSP = sp.MaSP
-JOIN HoaDonBan hdb ON cthdb.MaHDBan = hdb.MaHDBan
-WHERE YEAR(hdb.NgayBan) = YEAR(GETDATE()) AND MONTH(hdb.NgayBan) = MONTH(GETDATE())
-GROUP BY sp.MaSP, sp.TenSP
+    SUM(cthdb.SoLuong * (sp.GiaBan - sp.GiaNhap)) as TongLoiNhuan
+from ChiTietHDBan cthdb
+JOIN SanPham sp on cthdb.MasP = sp.MasP
+JOIN HoaDonBan hdb on cthdb.MaHDBan = hdb.MaHDBan
+where YEAR(hdb.NgayBan) = YEAR(GETdate()) AND MonTH(hdb.NgayBan) = MonTH(GETdate())
+GROUP BY sp.MasP, sp.TenSP
 ORDER BY TongLoiNhuan DESC;
 
 --- store proucedure
 go
 -----------TimKiemSanPhamTheoTen-------------
-create PROCEDURE sp_TimKiemSanPhamTheoTen (
-    @TenSP NVARCHAR(255)
+create procedure sp_TimKiemSanPhamTheoTen (
+    @TenSP nvarchar(255)
 )
-AS
-BEGIN
-    SELECT *
-    FROM SanPham
-    WHERE TenSP LIKE N'%' + @TenSP + N'%';
-END
+as
+begin
+    select *
+    from SanPham
+    where TenSP LIKE N'%' + @TenSP + N'%';
+end
 go
 
 -----------sp_LayThongTinHoaDonBan-------------
-create PROCEDURE sp_LayThongTinHoaDonBan (
-    @MaHDBan INT
+create procedure sp_LayThongTinHoaDonBan (
+    @MaHDBan int
 )
-AS
-BEGIN
-    SELECT
+as
+begin
+    select
         hdb.MaHDBan,
-        nv.HoTen AS TenNhanVien,
-        kh.HoTen AS TenKhachHang,
+        nv.HoTen as TenNhanVien,
+        kh.HoTen as TenKhachHang,
         hdb.NgayBan,
-        ct.MaSP,
+        ct.MasP,
         sp.TenSP,
         ct.SoLuong,
         ct.DonGia,
         ct.ThanhTien,
         hdb.TongTien,
         hdb.DiemSuDung
-    FROM HoaDonBan hdb
-    INNER JOIN NhanVien nv ON hdb.MaNV = nv.MaNV
-    INNER JOIN KhachHang kh ON hdb.MaKH = kh.MaKH
-    INNER JOIN ChiTietHDBan ct ON hdb.MaHDBan = ct.MaHDBan
-    INNER JOIN SanPham sp ON ct.MaSP = sp.MaSP
-    WHERE hdb.MaHDBan = @MaHDBan;
-END
+    from HoaDonBan hdb
+    INNER JOIN NhanVien nv on hdb.MaNV = nv.MaNV
+    INNER JOIN KhachHang kh on hdb.MaKH = kh.MaKH
+    INNER JOIN ChiTietHDBan ct on hdb.MaHDBan = ct.MaHDBan
+    INNER JOIN SanPham sp on ct.MasP = sp.MasP
+    where hdb.MaHDBan = @MaHDBan;
+end
 go
 
 -----------ThemNhanVien-------------
-CREATE PROCEDURE sp_ThemNhanVien (
-    @HoTen NVARCHAR(255),
-    @NgaySinh DATE,
-    @GioiTinh NVARCHAR(10),
-    @DiaChi NVARCHAR(255),
-    @SDT VARCHAR(20),
-    @Email VARCHAR(255),
-    @ChucVu NVARCHAR(50),
-    @NgayVaoLam DATE,
+create procedure sp_ThemNhanVien (
+    @HoTen nvarchar(255),
+    @NgaySinh date,
+    @GioiTinh nvarchar(10),
+    @DiaChi nvarchar(255),
+    @SDT varchar(20),
+    @Email varchar(255),
+    @ChucVu nvarchar(50),
+    @NgayVaoLam date,
     @Luong DECIMAL(10, 2)
 )
-AS
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM NhanVien WHERE SDT = @SDT)
-    BEGIN
-        IF @Email IS NULL OR NOT EXISTS (SELECT 1 FROM NhanVien WHERE Email = @Email)
-        BEGIN
-            INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, NgayVaoLam, Luong)
+as
+begin
+    IF NOT EXISTS (select 1 from NhanVien where SDT = @SDT)
+    begin
+        IF @Email IS NULL OR NOT EXISTS (select 1 from NhanVien where Email = @Email)
+        begin
+            insert into NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, NgayVaoLam, Luong)
             VALUES (@HoTen, @NgaySinh, @GioiTinh, @DiaChi, @SDT, @Email, @ChucVu, @NgayVaoLam, @Luong);
-        END
+        end
         ELSE
-        BEGIN
+        begin
             RAISERROR('Email đã tồn tại.', 16, 1);
-            RETURN;
-        END
-    END
+            return;
+        end
+    end
     ELSE
-    BEGIN
+    begin
         RAISERROR('Số điện thoại đã tồn tại.', 16, 1);
-        RETURN;
-    END
-END
+        return;
+    end
+end
 go
 
 -------------apdung khuyen cho san pham
-CREATE PROCEDURE sp_ApDungKhuyenMaiChoSanPham (
-    @MaKM INT,
-    @DanhSachMasP VARCHAR(MAX) -- Chuỗi các MasP cách nhau bởi dấu phẩy
+create procedure sp_ApDungKhuyenMaiChoSanPham (
+    @MaKM int,
+    @DanhSachMasP varchar(MAX) -- Chuỗi các MasP cách nhau bởi dấu phẩy
 )
-AS
-BEGIN
+as
+begin
     -- Kiểm tra mã khuyến mãi có tồn tại
-    IF NOT EXISTS (SELECT 1 FROM KhuyenMai WHERE MaKM = @MaKM)
-    BEGIN
+    IF NOT EXISTS (select 1 from KhuyenMai where MaKM = @MaKM)
+    begin
         RAISERROR('Mã khuyến mãi không tồn tại.', 16, 1);
-        RETURN;
-    END
+        return;
+    end
 
     -- Tách chuỗi MasP thành các giá trị riêng lẻ
-    DECLARE @MasPTach INT;
-    DECLARE @DanhSachMasPTach TABLE (MasP INT);
+    DECLARE @MasPTach int;
+    DECLARE @DanhSachMasPTach TABLE (MasP int);
 
     WHILE LEN(@DanhSachMasP) > 0
-    BEGIN
+    begin
         IF CHARINDEX(',', @DanhSachMasP) > 0
-        BEGIN
-            SELECT @MasPTach = CAST(SUBSTRING(@DanhSachMasP, 1, CHARINDEX(',', @DanhSachMasP) - 1) AS INT);
+        begin
+            select @MasPTach = CasT(SUBSTRING(@DanhSachMasP, 1, CHARINDEX(',', @DanhSachMasP) - 1) as int);
             SET @DanhSachMasP = SUBSTRING(@DanhSachMasP, CHARINDEX(',', @DanhSachMasP) + 1, LEN(@DanhSachMasP));
-        END
+        end
         ELSE
-        BEGIN
-            SELECT @MasPTach = CAST(@DanhSachMasP AS INT);
+        begin
+            select @MasPTach = CasT(@DanhSachMasP as int);
             SET @DanhSachMasP = '';
-        END
+        end
 
-        IF ISNUMERIC(@MasPTach) = 1 AND EXISTS (SELECT 1 FROM SanPham WHERE MasP = CAST(@MasPTach AS INT))
-        BEGIN
-            IF NOT EXISTS (SELECT 1 FROM ChiTietKhuyenMai WHERE MaKM = @MaKM AND MasP = CAST(@MasPTach AS INT))
-            BEGIN
-                INSERT INTO ChiTietKhuyenMai (MaKM, MasP)
-                VALUES (@MaKM, CAST(@MasPTach AS INT));
-            END
-        END
+        IF ISNUMERIC(@MasPTach) = 1 AND EXISTS (select 1 from SanPham where MasP = CasT(@MasPTach as int))
+        begin
+            IF NOT EXISTS (select 1 from ChiTietKhuyenMai where MaKM = @MaKM AND MasP = CasT(@MasPTach as int))
+            begin
+                insert into ChiTietKhuyenMai (MaKM, MasP)
+                VALUES (@MaKM, CasT(@MasPTach as int));
+            end
+        end
         ELSE IF ISNUMERIC(@MasPTach) = 0 AND LEN(LTRIM(RTRIM(@MasPTach))) > 0
-        BEGIN
+        begin
             RAISERROR('Mã sản phẩm không hợp lệ: %s', 16, 1, @MasPTach);
-            RETURN;
-        END
-        ELSE IF NOT EXISTS (SELECT 1 FROM SanPham WHERE MasP = CAST(@MasPTach AS INT)) AND ISNUMERIC(@MasPTach) = 1
-        BEGIN
+            return;
+        end
+        ELSE IF NOT EXISTS (select 1 from SanPham where MasP = CasT(@MasPTach as int)) AND ISNUMERIC(@MasPTach) = 1
+        begin
             RAISERROR('Mã sản phẩm không tồn tại: %s', 16, 1, @MasPTach);
-            RETURN;
-        END
-    END
-END;
-GO
+            return;
+        end
+    end
+end;
+go
 
 
 ------------ lấy theo san pham theo loai
-CREATE PROCEDURE sp_LaySanPhamTheoLoai (
-    @MaLoaiSP INT
+create procedure sp_LaySanPhamTheoLoai (
+    @MaLoaiSP int
 )
-AS
-BEGIN
-    IF EXISTS (SELECT 1 FROM LoaiSanPham WHERE MaLoaiSP = @MaLoaiSP)
-    BEGIN
-        SELECT sp.*
-        FROM SanPham sp
-        WHERE sp.MaLoaiSP = @MaLoaiSP;
-    END
+as
+begin
+    IF EXISTS (select 1 from LoaiSanPham where MaLoaiSP = @MaLoaiSP)
+    begin
+        select sp.*
+        from SanPham sp
+        where sp.MaLoaiSP = @MaLoaiSP;
+    end
     ELSE
-    BEGIN
+    begin
         RAISERROR('Mã loại sản phẩm không tồn tại.', 16, 1);
-        RETURN;
-    END
-END
-GO
+        return;
+    end
+end
+go
 
 
 --- function
 
 ----------------------TinhTongTienHoaDonBan
-CREATE FUNCTION fn_TinhTongTienHoaDonBan (@MaHDBan INT)
-RETURNS DECIMAL(10, 2)
-AS
-BEGIN
+create FUNCTIon fn_TinhTongTienHoaDonBan (@MaHDBan int)
+returnS DECIMAL(10, 2)
+as
+begin
     DECLARE @TongTien DECIMAL(10, 2);
 
-    SELECT @TongTien = SUM(ThanhTien)
-    FROM ChiTietHDBan
-    WHERE MaHDBan = @MaHDBan;
+    select @TongTien = SUM(ThanhTien)
+    from ChiTietHDBan
+    where MaHDBan = @MaHDBan;
 
-    RETURN ISNULL(@TongTien, 0);
-END
-GO
+    return ISNULL(@TongTien, 0);
+end
+go
 
 ---------------LayTenNhanVien
-CREATE FUNCTION fn_LayTenNhanVien (@MaNV INT)
-RETURNS NVARCHAR(255)
-AS
-BEGIN
-    DECLARE @HoTen NVARCHAR(255);
+create FUNCTIon fn_LayTenNhanVien (@MaNV int)
+returnS nvarchar(255)
+as
+begin
+    DECLARE @HoTen nvarchar(255);
 
-    SELECT @HoTen = HoTen
-    FROM NhanVien
-    WHERE MaNV = @MaNV;
+    select @HoTen = HoTen
+    from NhanVien
+    where MaNV = @MaNV;
 
-    RETURN @HoTen;
-END
-GO
+    return @HoTen;
+end
+go
 
 --- trigger
 
 ----------------------CapNhatSoLuongTonKho_ChiTietHDNhap
-CREATE TRIGGER trg_CapNhatSoLuongTonKho_ChiTietHDNhap_Insert
-ON ChiTietHDNhap
+create trigger trg_CapNhatSoLuongTonKho_ChiTietHDNhap_Insert
+on ChiTietHDNhap
 AFTER INSERT
-AS
-BEGIN
-    UPDATE SanPham
+as
+begin
+    UPdate SanPham
     SET SoLuongTonKho = SoLuongTonKho + inserted.SoLuong
-    FROM inserted
-    WHERE SanPham.MaSP = inserted.MaSP;
-END
-GO
+    from inserted
+    where SanPham.MasP = inserted.MasP;
+end
+go
 
 
 --------------------------NgayKetThucKhuyenMai
-CREATE TRIGGER trg_NgayKetThucKhuyenMai
-ON KhuyenMai
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    IF EXISTS (SELECT 1 FROM inserted WHERE NgayKetThuc < NgayBatDau)
-    BEGIN
+create trigger trg_NgayKetThucKhuyenMai
+on KhuyenMai
+AFTER INSERT, UPdate
+as
+begin
+    IF EXISTS (select 1 from inserted where NgayKetThuc < NgayBatDau)
+    begin
         RAISERROR('Ngày kết thúc khuyến mãi không được sớm hơn ngày bắt đầu.', 16, 1);
-        ROLLBACK TRANSACTION;
-        RETURN;
-    END
-END
-GO
+        ROLLBACK TRANSACTIon;
+        return;
+    end
+end
+go
 
 
 ------------------------CapNhatThanhTienChiTietHDBan
-CREATE TRIGGER trg_CapNhatThanhTienChiTietHDBan_InsertUpdate
-ON ChiTietHDBan
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    UPDATE ChiTietHDBan
+create trigger trg_CapNhatThanhTienChiTietHDBan_InsertUpdate
+on ChiTietHDBan
+AFTER INSERT, UPdate
+as
+begin
+    UPdate ChiTietHDBan
     SET ThanhTien = inserted.SoLuong * inserted.DonGia
-    FROM inserted
-    WHERE ChiTietHDBan.MaHDBan = inserted.MaHDBan AND ChiTietHDBan.MaSP = inserted.MaSP;
-END
-GO
+    from inserted
+    where ChiTietHDBan.MaHDBan = inserted.MaHDBan AND ChiTietHDBan.MasP = inserted.MasP;
+end
+go
 
 ---------------------------------------------------------------end----------------------------------------
-*/
