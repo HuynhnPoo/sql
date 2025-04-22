@@ -35,8 +35,9 @@ create table NhanVien (
    Email varchar(255) ,
     ChucVu nvarchar(50) NOT NULL,
     NgayVaoLam date,
-     Luong DECIMAL(10, 2) CHECK (Luong > 0)
+    Luong DECIMAL(10, 2) CHECK (Luong > 0)
 );
+go
 
 -- Bảng KhachHang
 create table KhachHang (
@@ -47,7 +48,7 @@ create table KhachHang (
     Email varchar(255) ,
     DiemTichLuy int DEFAULT 0
 );
-
+go
 -- Bảng NhaCungCap
 create table NhaCungCap (
     MaNCC int identity(1,1)primary key,
@@ -56,14 +57,14 @@ create table NhaCungCap (
     SDT varchar(20) ,
     Email varchar(255) 
 );
-
+go
 -- Bảng LoaiSanPham
 create table LoaiSanPham (
     MaLoaiSP int identity(1,1)primary key,
     TenLoaiSP nvarchar(255) NOT NULL,
     MoTa nvarchar(MAX)
 );
-
+go
 -- Bảng SanPham
 create table SanPham (
     MasP int primary key,
@@ -79,7 +80,7 @@ create table SanPham (
     FOREIGN KEY (MaLoaiSP) REFERENCES LoaiSanPham(MaLoaiSP),
     FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC)
 );
-
+go
 -- Bảng KhuyenMai
 create table KhuyenMai (
     MaKM int identity(1,1)primary key,
@@ -89,7 +90,7 @@ create table KhuyenMai (
     PhanTramGiamGia DECIMAL(5, 2) CHECK (PhanTramGiamGia BETWEEN 0 AND 100),
     MoTa nvarchar(MAX)
 );
-
+go
 -- Bảng ChiTietKhuyenMai
 create table ChiTietKhuyenMai (
     MaKM int NOT NULL,
@@ -98,7 +99,7 @@ create table ChiTietKhuyenMai (
     FOREIGN KEY (MaKM) REFERENCES KhuyenMai(MaKM),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
-
+go
 -- Bảng HoaDonBan
 create table HoaDonBan (
     MaHDBan int identity(1,1)primary key,
@@ -110,7 +111,7 @@ create table HoaDonBan (
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
 );
-
+go
 -- Bảng ChiTietHDBan
 create table ChiTietHDBan (
     MaHDBan int NOT NULL,
@@ -122,7 +123,7 @@ create table ChiTietHDBan (
     FOREIGN KEY (MaHDBan) REFERENCES HoaDonBan(MaHDBan),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
-
+go
 -- Bảng HoaDonNhap
 create table HoaDonNhap (
     MaHDNhap int identity(1,1)primary key,
@@ -133,7 +134,7 @@ create table HoaDonNhap (
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
     FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC)
 );
-
+go
 -- Bảng ChiTietHDNhap
 create table ChiTietHDNhap (
    MaHDNhap int NOT NULL,
@@ -145,7 +146,7 @@ create table ChiTietHDNhap (
     FOREIGN KEY (MaHDNhap) REFERENCES HoaDonNhap(MaHDNhap),
     FOREIGN KEY (MasP) REFERENCES SanPham(MasP)
 );
-
+go
 -- Bảng PhieuKiemKho
 create table PhieuKiemKho (
     MaPhieuKK int identity(1,1)primary key,
@@ -154,7 +155,7 @@ create table PhieuKiemKho (
     MoTa nvarchar(MAX),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
 );
-
+go
 -- Bảng ChiTietPhieuKiemKho
 create table ChiTietPhieuKiemKho (
      MaPhieuKK int NOT NULL,
@@ -321,7 +322,7 @@ insert into NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SDT, Email, ChucVu, Nga
 (N'Đỗ Văn Lợi', '1989-06-30', N'Nam', N'Hòa Bình', '0969001067', 'loi.do@gmail.com', N'Nhân viên vận hành máy', '2021-07-07', 9300000),
 (N'Vũ Thị Oanh', '1994-09-09', N'Nữ', N'Ninh Thuận', '0979001068', 'oanh.vu@gmail.com', N'Nhân viên phân tích kinh doanh', '2023-05-15', 9500000),
 (N'Đặng Thị Loan', '1994-02-02', N'Nữ', N'Vĩnh Phúc', '0924123421', 'loan.dang@gmail.com', N'Nhân viên phân tích dữ liệu', '2024-05-01', 10100000);
-
+go
 -- Bảng KhachHang
 insert into KhachHang (HoTen, SDT, DiaChi, Email, DiemTichLuy) VALUES
 (N'Lê Thị M', '093123456', N'30 Đường Bà Triệu, Hà Nội', 'mle@email.com', 150),
@@ -424,7 +425,7 @@ insert into KhachHang (HoTen, SDT, DiaChi, Email, DiemTichLuy) VALUES
 (N'Vi Thị Lài', '099478999', N'47 Nguyễn Văn Cừ, Cao Bằng', 'lai.vi@email.com', 180),
 (N'Chu Văn Long', '090590100', N'26 Đinh Tiên Hoàng, Điện Biên', 'long.chu@email.com', 190),
 (N'Hà Văn V', '098111233', N'300 Đường Láng Hạ, Hà Nội', 'v.ha@email.com', 170);
-
+go
 -- Bảng NhaCungCap
 insert into NhaCungCap (TenNCC, DiaChi, SDT, Email) VALUES
 
@@ -529,7 +530,7 @@ insert into NhaCungCap (TenNCC, DiaChi, SDT, Email) VALUES
 (N'Công ty Thực phẩm quốc tế Masan', N'TP.HCM', '0282222334', 'support@masan.vn'),
 (N'Hợp tác xã E', N'Hà Nam', '0226554433', 'cooperativeE@hoptac.com');
 
-
+go
 -- Bảng LoaiSanPham
 insert into LoaiSanPham (TenLoaiSP, MoTa) VALUES
 (N'Điện tử', N'Các sản phẩm điện tử gia dụng và cá nhân'),
@@ -632,7 +633,7 @@ insert into LoaiSanPham (TenLoaiSP, MoTa) VALUES
 (N'Thiết bị lưu điện', N'Bộ lưu điện và thiết bị dự phòng điện'),
 (N'Dụng cụ golf', N'Gậy golf, bóng golf và phụ kiện golf'),
 (N'Sản phẩm chăm sóc da nhạy cảm', N'Sản phẩm dành cho da nhạy cảm');
-
+go
 -- Bảng SanPham
 insert into SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, SoLuongTonKho, HanSuDung, MoTa) VALUES
 (1,N'Tivi Samsung Smart 4K 55 inch', 1, 1, N'Chiếc', 8000000, 12000000, 50, NULL, N'Tivi thông minh màn hình lớn'),
@@ -736,7 +737,7 @@ insert into SanPham (MasP,TenSP, MaLoaiSP, MaNCC, DonViTinh, GiaNhap, GiaBan, So
 (99,N'Đồng hồ thông minh Apple Watch', 99, 99, N'Chiếc', 6000000, 9000000, 25, NULL, N'Đồng hồ thông minh cao cấp'),
 (100,N'Bánh gạo Orion 200g', 100, 100, N'Gói', 20000, 35000, 200, '2025-11-15', N'Bánh gạo giòn ngon');
 
-
+go
 -- Bảng KhuyenMai
 insert into KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VALUES
 (N'Giảm giá cuối tuần', '2025-04-12', '2025-04-13', 15.00, N'Giảm 15% cho tất cả sản phẩm vào cuối tuần'),
@@ -839,7 +840,7 @@ insert into KhuyenMai (TenKM, NgayBatDau, NgayKetThuc, PhanTramGiamGia, MoTa) VA
 (N'Giảm giá phẩm đông lạnh', '2025-11-15', '2025-11-25', 12.00, N'Giảm 12% cho thực phẩm đông lạnh'),
 (N'Giảm giá cho sản phẩm đồ dùng thể thao', '2025-08-01', '2025-08-10', 20.00, N'Giảm 20% cho đồ dùng thể thao'),
 (N'Khuyến mãi ngày hội sáng tạo', '2026-03-01', '2026-03-05', 25.00, N'Giảm 25% cho sản phẩm hỗ trợ sáng tạo');
-
+go
 insert into ChiTietKhuyenMai (MaKM, MasP) VALUES
 (1, 1),
 (2, 2),
@@ -941,6 +942,7 @@ insert into ChiTietKhuyenMai (MaKM, MasP) VALUES
 (49, 78),
 (50, 79),
 (50, 80);
+go
 -- Bảng HoaDonBan
 insert into HoaDonBan (MaNV, MaKH, NgayBan, TongTien, DiemSuDung) VALUES
 (1, 1, GETdate(), 11400000, 0),
@@ -1043,7 +1045,7 @@ insert into HoaDonBan (MaNV, MaKH, NgayBan, TongTien, DiemSuDung) VALUES
 (98, 98, dateADD(day, -97, GETdate()), 600000, 25),
 (99, 99, dateADD(day, -98, GETdate()), 120000, 10),
 (100, 100, dateADD(day, -99, GETdate()), 9500000, 40);
-
+go
 -- Bảng ChiTietHDBan
 insert into ChiTietHDBan (MaHDBan, MasP, SoLuong, DonGia, ThanhTien) VALUES
 (1, 1, 1, 12000000, 12000000),
@@ -1146,8 +1148,7 @@ insert into ChiTietHDBan (MaHDBan, MasP, SoLuong, DonGia, ThanhTien) VALUES
 (98, 98, 2, 80000, 160000),
 (99, 99, 1, 2000000, 2000000),
 (100, 100, 3, 50000, 150000);
-
-
+go
 -- Tiếp tục bảng HoaDonNhap
 insert into HoaDonNhap (MaNV, MaNCC, NgayNhap, TongTien) VALUES
 (2, 1, dateADD(day, -10, GETdate()), 7200000),
@@ -1250,8 +1251,7 @@ insert into HoaDonNhap (MaNV, MaNCC, NgayNhap, TongTien) VALUES
 (98, 98, dateADD(day, -107, GETdate()), 7200000),
 (99, 99, dateADD(day, -108, GETdate()), 4200000),
 (100, 100, dateADD(day, -109, GETdate()), 8700000);
-
-
+go
 -- Bảng ChiTietHDNhap
 insert into ChiTietHDNhap (MaHDNhap, MasP, SoLuong, DonGia, ThanhTien) VALUES
 (1, 1, 10, 720000, 7200000),
@@ -1354,8 +1354,7 @@ insert into ChiTietHDNhap (MaHDNhap, MasP, SoLuong, DonGia, ThanhTien) VALUES
 (98, 18, 59, 200000, 11800000),
 (99, 19, 65, 50000, 3250000),
 (100, 20, 68, 25000, 1700000);
-
-
+go
 -- Bảng PhieuKiemKho
 insert into PhieuKiemKho (MaNV, NgayKiemKho, MoTa) VALUES
 (1, GETdate(), N'Kiểm kê hàng hóa định kỳ'),
@@ -1458,8 +1457,7 @@ insert into PhieuKiemKho (MaNV, NgayKiemKho, MoTa) VALUES
 (98, dateADD(day, -485, GETdate()), N'Kiểm tra hàng hóa đồ dùng công nghệ'),
 (99, dateADD(day, -490, GETdate()), N'Kiểm kê hàng hóa đồ dùng giải trí'),
 (100, dateADD(day, -495, GETdate()), N'Kiểm tra hàng hóa đồ dùng sức khỏe');
-
-
+go
 -- Bảng ChiTietPhieuKiemKho
 insert into ChiTietPhieuKiemKho (MaPhieuKK, MasP, SoLuongThucTe, SoLuongHeThong, ChenhLech) VALUES
 (1, 1, 50, 50, 0),
@@ -1842,6 +1840,7 @@ begin
         end
     end
 end;
+
 go
 
 
@@ -1899,8 +1898,7 @@ end
 go
 
 --- trigger
-
-----------------------CapNhatSoLuongTonKho_ChiTietHDNhap
+----------------------CapNhatSoLuongTonKho_ChiTietHDNhap-------------
 create trigger trg_CapNhatSoLuongTonKho_ChiTietHDNhap_Insert
 on ChiTietHDNhap
 AFTER INSERT
